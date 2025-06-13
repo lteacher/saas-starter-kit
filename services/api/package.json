@@ -1,0 +1,18 @@
+{
+  "name": "api",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts",
+    "postinstall": "bun @gel/generate edgeql-js --target=ts"
+  },
+  "dependencies": {
+    "elysia": "latest",
+    "gel": "^2.1.0"
+  },
+  "devDependencies": {
+    "@gel/generate": "^0.6.3",
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
+}
