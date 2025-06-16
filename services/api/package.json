@@ -1,18 +1,24 @@
 {
-  "name": "api",
-  "version": "1.0.50",
+  "name": "@saas-starter/api",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "start": "bun run dist/index.js",
+    "lint": "echo 'No linting configured yet'",
     "postinstall": "bun @gel/generate edgeql-js --target=ts"
   },
   "dependencies": {
     "elysia": "latest",
-    "gel": "^2.1.0"
+    "gel": "^2.1.0",
+    "@saas-starter/schemas": "workspace:*",
+    "@saas-starter/utils": "workspace:*",
+    "@saas-starter/db": "workspace:*"
   },
   "devDependencies": {
     "@gel/generate": "^0.6.3",
-    "bun-types": "latest"
-  },
-  "module": "src/index.js"
+    "bun-types": "latest",
+    "typescript": "^5.4.5"
+  }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "@saas-starter/db",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "gel": "^2.1.0"
+  },
+  "devDependencies": {
+    "@gel/generate": "^0.6.3",
+    "typescript": "^5.4.5"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  }
+}

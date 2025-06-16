@@ -1,6 +1,7 @@
 {
-  "name": "my-qwik-empty-starter",
-  "description": "Blank project with routing included",
+  "name": "@saas-starter/ui",
+  "description": "SaaS Starter Kit - Qwik Frontend",
+  "version": "1.0.0",
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
@@ -12,7 +13,6 @@
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
     "build.types": "tsc --incremental --noEmit",
-    "deploy": "echo 'Run \"npm run qwik add\" to install a server adapter'",
     "dev": "vite --mode ssr",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "fmt": "prettier --write .",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@builder.io/qwik": "^1.14.1",
     "@builder.io/qwik-city": "^1.14.1",
+    "@elysiajs/eden": "^1.0.0",
     "@eslint/js": "latest",
     "@types/node": "20.14.11",
     "eslint": "9.25.1",
@@ -35,6 +36,9 @@
     "typescript-eslint": "8.26.1",
     "undici": "*",
     "vite": "5.3.5",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "@saas-starter/schemas": "workspace:*",
+    "@saas-starter/utils": "workspace:*",
+    "@saas-starter/api": "workspace:*"
   }
 }
