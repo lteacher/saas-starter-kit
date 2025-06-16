@@ -37,33 +37,6 @@ export const withTransaction = async <T>(
   }
 };
 
-// Individual query helper functions for direct import
-export const findById = async <T>(query: string, id: string): Promise<Result<T | null>> => {
-  try {
-    const result = await db.querySingle<T>(query, { id });
-    return success(result);
-  } catch (err) {
-    return error(err as Error);
-  }
-};
-
-export const findMany = async <T>(query: string, params: Record<string, any> = {}): Promise<Result<T[]>> => {
-  try {
-    const results = await db.query<T>(query, params);
-    return success(results);
-  } catch (err) {
-    return error(err as Error);
-  }
-};
-
-export const execute = async <T>(query: string, params: Record<string, any> = {}): Promise<Result<T>> => {
-  try {
-    const result = await db.querySingle<T>(query, params);
-    return success(result);
-  } catch (err) {
-    return error(err as Error);
-  }
-};
 
 // Export the generated EdgeQL query builder (will be available after generation)
 export * from './edgeql-js';

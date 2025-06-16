@@ -6,18 +6,15 @@
     "dev": "bun run --watch src/index.ts",
     "build": "bun build src/index.ts --outdir dist --target bun",
     "start": "bun run dist/index.js",
-    "lint": "echo 'No linting configured yet'",
-    "postinstall": "bun @gel/generate edgeql-js --target=ts"
+    "lint": "echo 'No linting configured yet'"
   },
   "dependencies": {
     "elysia": "latest",
-    "gel": "^2.1.0",
     "@saas-starter/schemas": "workspace:*",
     "@saas-starter/utils": "workspace:*",
     "@saas-starter/db": "workspace:*"
   },
   "devDependencies": {
-    "@gel/generate": "^0.6.3",
     "bun-types": "latest",
     "typescript": "^5.4.5"
   }
