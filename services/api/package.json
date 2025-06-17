@@ -9,10 +9,14 @@
     "lint": "echo 'No linting configured yet'"
   },
   "dependencies": {
-    "elysia": "latest",
+    "@elysiajs/cors": "^1.0.0",
+    "@elysiajs/jwt": "^1.0.0",
+    "@elysiajs/swagger": "^1.0.0",
+    "@rasla/logify": "^5.0.0",
+    "@saas-starter/db": "workspace:*",
     "@saas-starter/schemas": "workspace:*",
     "@saas-starter/utils": "workspace:*",
-    "@saas-starter/db": "workspace:*"
+    "elysia": "latest"
   },
   "devDependencies": {
     "bun-types": "latest",

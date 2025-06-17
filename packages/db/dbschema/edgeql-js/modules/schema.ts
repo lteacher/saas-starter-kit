@@ -6,6 +6,7 @@ import type * as _std from "./std";
 import type * as _sys from "./sys";
 import type * as _cfg from "./cfg";
 import type * as _stdnethttp from "./std/net/http";
+import type * as _$default from "./default";
 export type $AccessKind = {
   "Select": $.$expr_Literal<$AccessKind>;
   "UpdateRead": $.$expr_Literal<$AccessKind>;
@@ -710,6 +711,11 @@ export type $ObjectTypeλShape = $.typeutil.flatten<$SourceλShape & Omit<$Consi
   "<__type__[is schema::Trigger]": $.LinkDesc<$Trigger, $.Cardinality.Many, {}, false, false,  false, false>;
   "<__type__[is schema::ObjectType]": $.LinkDesc<$ObjectType, $.Cardinality.Many, {}, false, false,  false, false>;
   "<__type__[is schema::Extension]": $.LinkDesc<$Extension, $.Cardinality.Many, {}, false, false,  false, false>;
+  "<__type__[is AuditLog]": $.LinkDesc<_$default.$AuditLog, $.Cardinality.Many, {}, false, false,  false, false>;
+  "<__type__[is User]": $.LinkDesc<_$default.$User, $.Cardinality.Many, {}, false, false,  false, false>;
+  "<__type__[is Permission]": $.LinkDesc<_$default.$Permission, $.Cardinality.Many, {}, false, false,  false, false>;
+  "<__type__[is Role]": $.LinkDesc<_$default.$Role, $.Cardinality.Many, {}, false, false,  false, false>;
+  "<__type__[is UserSession]": $.LinkDesc<_$default.$UserSession, $.Cardinality.Many, {}, false, false,  false, false>;
   "<__type__": $.LinkDesc<$.ObjectType, $.Cardinality.Many, {}, false, false,  false, false>;
   "<intersection_of": $.LinkDesc<$.ObjectType, $.Cardinality.Many, {}, false, false,  false, false>;
   "<subject": $.LinkDesc<$.ObjectType, $.Cardinality.Many, {}, false, false,  false, false>;

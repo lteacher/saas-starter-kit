@@ -171,27 +171,6 @@ const $Role = $.makeType<$Role>(_.spec, "04d3804d-c37f-5969-86b2-a24309653b14", 
 
 const Role: $.$expr_PathNode<$.TypeSet<$Role, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($Role, $.Cardinality.Many), null);
 
-type get_current_branchλFuncExpr = $.$expr_Function<
-  _std.$str, $.Cardinality.One
->;
-/**
- * Return the name of the current database branch as a string.
- */
-function get_current_branch(): get_current_branchλFuncExpr;
-function get_current_branch(...args: any[]) {
-  const {returnType, cardinality, args: positionalArgs, namedArgs} = _.syntax.$resolveOverload('sys::get_current_branch', args, _.spec, [
-    {args: [], returnTypeId: "00000000-0000-0000-0000-000000000101"},
-  ]);
-  return _.syntax.$expressionify({
-    __kind__: $.ExpressionKind.Function,
-    __element__: returnType,
-    __cardinality__: cardinality,
-    __name__: "sys::get_current_branch",
-    __args__: positionalArgs,
-    __namedargs__: namedArgs,
-  }) as any;
-};
-
 type reset_query_statsλFuncExpr<
   NamedArgs extends {
     "branch_name"?: _.castMaps.orScalarLiteral<$.TypeSet<_std.$str>>,
@@ -332,6 +311,27 @@ function get_current_database(...args: any[]) {
   }) as any;
 };
 
+type get_current_branchλFuncExpr = $.$expr_Function<
+  _std.$str, $.Cardinality.One
+>;
+/**
+ * Return the name of the current database branch as a string.
+ */
+function get_current_branch(): get_current_branchλFuncExpr;
+function get_current_branch(...args: any[]) {
+  const {returnType, cardinality, args: positionalArgs, namedArgs} = _.syntax.$resolveOverload('sys::get_current_branch', args, _.spec, [
+    {args: [], returnTypeId: "00000000-0000-0000-0000-000000000101"},
+  ]);
+  return _.syntax.$expressionify({
+    __kind__: $.ExpressionKind.Function,
+    __element__: returnType,
+    __cardinality__: cardinality,
+    __name__: "sys::get_current_branch",
+    __args__: positionalArgs,
+    __namedargs__: namedArgs,
+  }) as any;
+};
+
 
 
 export { OutputFormat, QueryType, TransactionAccessMode, TransactionDeferrability, TransactionIsolation, VersionStage, $SystemObject, SystemObject, $ExternalObject, ExternalObject, $Branch, Branch, $Database, Database, $ExtensionPackage, ExtensionPackage, $ExtensionPackageMigration, ExtensionPackageMigration, $QueryStats, QueryStats, $Role, Role };
@@ -351,13 +351,13 @@ type __defaultExports = {
   "ExtensionPackageMigration": typeof ExtensionPackageMigration;
   "QueryStats": typeof QueryStats;
   "Role": typeof Role;
-  "get_current_branch": typeof get_current_branch;
   "reset_query_stats": typeof reset_query_stats;
   "get_version": typeof get_version;
   "get_version_as_str": typeof get_version_as_str;
   "get_instance_name": typeof get_instance_name;
   "get_transaction_isolation": typeof get_transaction_isolation;
-  "get_current_database": typeof get_current_database
+  "get_current_database": typeof get_current_database;
+  "get_current_branch": typeof get_current_branch
 };
 const __defaultExports: __defaultExports = {
   "OutputFormat": OutputFormat,
@@ -374,12 +374,12 @@ const __defaultExports: __defaultExports = {
   "ExtensionPackageMigration": ExtensionPackageMigration,
   "QueryStats": QueryStats,
   "Role": Role,
-  "get_current_branch": get_current_branch,
   "reset_query_stats": reset_query_stats,
   "get_version": get_version,
   "get_version_as_str": get_version_as_str,
   "get_instance_name": get_instance_name,
   "get_transaction_isolation": get_transaction_isolation,
-  "get_current_database": get_current_database
+  "get_current_database": get_current_database,
+  "get_current_branch": get_current_branch
 };
 export default __defaultExports;

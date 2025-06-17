@@ -38,7 +38,8 @@ export const withTransaction = async <T>(
 };
 
 
-// Export the generated EdgeQL query builder (will be available after generation)
-export * from './edgeql-js';
+// Export the generated EdgeQL query builder
+export * from '../dbschema/edgeql-js';
+export { default as e } from '../dbschema/edgeql-js';
 
 export default db;

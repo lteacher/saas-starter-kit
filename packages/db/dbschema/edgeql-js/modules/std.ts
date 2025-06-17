@@ -99,10 +99,20 @@ export type $BaseObjectλShape = $.typeutil.flatten<{
 }>;
 type $BaseObject = $.ObjectType<"std::BaseObject", $BaseObjectλShape, null, [
   {id: {__element__: $uuid, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
-], "cfg::Auth" | "cfg::DatabaseConfig" | "cfg::BranchConfig" | "cfg::Config" | "cfg::InstanceConfig" | "cfg::JWT" | "cfg::Password" | "cfg::SCRAM" | "cfg::SMTPProviderConfig" | "cfg::Trust" | "cfg::mTLS" | "schema::AccessPolicy" | "schema::Alias" | "schema::Annotation" | "schema::Array" | "schema::ArrayExprAlias" | "schema::Cast" | "schema::Constraint" | "schema::Delta" | "schema::Extension" | "schema::Function" | "schema::FutureBehavior" | "schema::Global" | "schema::Index" | "schema::Link" | "schema::Migration" | "schema::Module" | "schema::MultiRange" | "schema::MultiRangeExprAlias" | "schema::ObjectType" | "schema::Operator" | "schema::Parameter" | "schema::Property" | "schema::PseudoType" | "schema::Range" | "schema::RangeExprAlias" | "schema::Rewrite" | "schema::ScalarType" | "schema::Trigger" | "schema::Tuple" | "schema::TupleElement" | "schema::TupleExprAlias" | "std::net::http::Response" | "std::net::http::ScheduledRequest" | "sys::Branch" | "sys::Database" | "sys::ExtensionPackage" | "sys::ExtensionPackageMigration" | "sys::QueryStats" | "sys::Role">;
+], "cfg::Auth" | "cfg::DatabaseConfig" | "cfg::BranchConfig" | "cfg::Config" | "cfg::InstanceConfig" | "cfg::JWT" | "cfg::Password" | "cfg::SCRAM" | "cfg::SMTPProviderConfig" | "cfg::Trust" | "cfg::mTLS" | "default::AuditLog" | "default::Permission" | "default::Role" | "default::User" | "default::UserSession" | "schema::AccessPolicy" | "schema::Alias" | "schema::Annotation" | "schema::Array" | "schema::ArrayExprAlias" | "schema::Cast" | "schema::Constraint" | "schema::Delta" | "schema::Extension" | "schema::Function" | "schema::FutureBehavior" | "schema::Global" | "schema::Index" | "schema::Link" | "schema::Migration" | "schema::Module" | "schema::MultiRange" | "schema::MultiRangeExprAlias" | "schema::ObjectType" | "schema::Operator" | "schema::Parameter" | "schema::Property" | "schema::PseudoType" | "schema::Range" | "schema::RangeExprAlias" | "schema::Rewrite" | "schema::ScalarType" | "schema::Trigger" | "schema::Tuple" | "schema::TupleElement" | "schema::TupleExprAlias" | "std::net::http::Response" | "std::net::http::ScheduledRequest" | "sys::Branch" | "sys::Database" | "sys::ExtensionPackage" | "sys::ExtensionPackageMigration" | "sys::QueryStats" | "sys::Role">;
 const $BaseObject = $.makeType<$BaseObject>(_.spec, "0d14e49f-d9f9-51f0-b8f4-c432982cbac2", _.syntax.literal);
 
 const BaseObject: $.$expr_PathNode<$.TypeSet<$BaseObject, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($BaseObject, $.Cardinality.Many), null);
+
+export type $Object_8ce8c71ee4fa5f73840c22d7eaa58588λShape = $.typeutil.flatten<$BaseObjectλShape & {
+}>;
+type $Object_8ce8c71ee4fa5f73840c22d7eaa58588 = $.ObjectType<"std::Object", $Object_8ce8c71ee4fa5f73840c22d7eaa58588λShape, null, [
+  ...$BaseObject['__exclusives__'],
+], "default::AuditLog" | "default::Permission" | "default::Role" | "default::User" | "default::UserSession">;
+export type $Object = $Object_8ce8c71ee4fa5f73840c22d7eaa58588
+const $Object_8ce8c71ee4fa5f73840c22d7eaa58588 = $.makeType<$Object_8ce8c71ee4fa5f73840c22d7eaa58588>(_.spec, "8ce8c71e-e4fa-5f73-840c-22d7eaa58588", _.syntax.literal);
+
+const Object_8ce8c71ee4fa5f73840c22d7eaa58588: $.$expr_PathNode<$.TypeSet<$Object_8ce8c71ee4fa5f73840c22d7eaa58588, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($Object_8ce8c71ee4fa5f73840c22d7eaa58588, $.Cardinality.Many), null);
 
 export type $FreeObjectλShape = $.typeutil.flatten<{
 }>;
@@ -111,16 +121,6 @@ type $FreeObject = $.ObjectType<"std::FreeObject", $FreeObjectλShape, null, [
 const $FreeObject = $.makeType<$FreeObject>(_.spec, "3b741934-07ef-5b95-b7d6-cdc864fd2ae8", _.syntax.literal);
 
 const FreeObject: $.$expr_PathNode<$.TypeSet<$FreeObject, $.Cardinality.One>, null> = _.syntax.$PathNode($.$toSet($FreeObject, $.Cardinality.One), null);
-
-export type $Object_8ce8c71ee4fa5f73840c22d7eaa58588λShape = $.typeutil.flatten<$BaseObjectλShape & {
-}>;
-type $Object_8ce8c71ee4fa5f73840c22d7eaa58588 = $.ObjectType<"std::Object", $Object_8ce8c71ee4fa5f73840c22d7eaa58588λShape, null, [
-  ...$BaseObject['__exclusives__'],
-], never>;
-export type $Object = $Object_8ce8c71ee4fa5f73840c22d7eaa58588
-const $Object_8ce8c71ee4fa5f73840c22d7eaa58588 = $.makeType<$Object_8ce8c71ee4fa5f73840c22d7eaa58588>(_.spec, "8ce8c71e-e4fa-5f73-840c-22d7eaa58588", _.syntax.literal);
-
-const Object_8ce8c71ee4fa5f73840c22d7eaa58588: $.$expr_PathNode<$.TypeSet<$Object_8ce8c71ee4fa5f73840c22d7eaa58588, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($Object_8ce8c71ee4fa5f73840c22d7eaa58588, $.Cardinality.Many), null);
 
 type assert_singleλFuncExpr<
   NamedArgs extends {
@@ -4673,11 +4673,16 @@ type to_bytesλFuncExpr<
   $bytes, $.cardutil.paramCardinality<P1>
 >;
 type to_bytesλFuncExpr2<
-  P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$uuid>>,
+  P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$json>>,
 > = $.$expr_Function<
   $bytes, $.cardutil.paramCardinality<P1>
 >;
 type to_bytesλFuncExpr3<
+  P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$uuid>>,
+> = $.$expr_Function<
+  $bytes, $.cardutil.paramCardinality<P1>
+>;
+type to_bytesλFuncExpr4<
   P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$number>>,
   P2 extends _.castMaps.orScalarLiteral<$.TypeSet<$Endian>>,
 > = $.$expr_Function<
@@ -4692,13 +4697,21 @@ function to_bytes<
   s: P1,
 ): to_bytesλFuncExpr<P1>;
 /**
+ * Convert a json value to a binary UTF-8 string.
+ */
+function to_bytes<
+  P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$json>>,
+>(
+  j: P1,
+): to_bytesλFuncExpr2<P1>;
+/**
  * Convert an UUID to binary format.
  */
 function to_bytes<
   P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$uuid>>,
 >(
   val: P1,
-): to_bytesλFuncExpr2<P1>;
+): to_bytesλFuncExpr3<P1>;
 /**
  * Convert an int16 using specified endian binary format.
  */
@@ -4708,10 +4721,11 @@ function to_bytes<
 >(
   val: P1,
   endian: P2,
-): to_bytesλFuncExpr3<P1, P2>;
+): to_bytesλFuncExpr4<P1, P2>;
 function to_bytes(...args: any[]) {
   const {returnType, cardinality, args: positionalArgs, namedArgs} = _.syntax.$resolveOverload('std::to_bytes', args, _.spec, [
     {args: [{typeId: "00000000-0000-0000-0000-000000000101", optional: false, setoftype: false, variadic: false}], returnTypeId: "00000000-0000-0000-0000-000000000102"},
+    {args: [{typeId: "00000000-0000-0000-0000-00000000010f", optional: false, setoftype: false, variadic: false}], returnTypeId: "00000000-0000-0000-0000-000000000102"},
     {args: [{typeId: "00000000-0000-0000-0000-000000000100", optional: false, setoftype: false, variadic: false}], returnTypeId: "00000000-0000-0000-0000-000000000102"},
     {args: [{typeId: "00000000-0000-0000-0000-0000000001ff", optional: false, setoftype: false, variadic: false}, {typeId: "e4a1d11b-227e-5744-a0c9-31f9cd756e7b", optional: false, setoftype: false, variadic: false}], returnTypeId: "00000000-0000-0000-0000-000000000102"},
   ]);
@@ -5248,7 +5262,7 @@ function sequence_next(...args: any[]) {
 
 
 
-export { Endian, JsonEmpty, bigint, bool, bytes, datetime, decimal, duration, float32, float64, int16, int32, int64, json, $sequence, str, uuid, number, $BaseObject, BaseObject, $FreeObject, FreeObject, $Object_8ce8c71ee4fa5f73840c22d7eaa58588, Object_8ce8c71ee4fa5f73840c22d7eaa58588 };
+export { Endian, JsonEmpty, bigint, bool, bytes, datetime, decimal, duration, float32, float64, int16, int32, int64, json, $sequence, str, uuid, number, $BaseObject, BaseObject, $Object_8ce8c71ee4fa5f73840c22d7eaa58588, Object_8ce8c71ee4fa5f73840c22d7eaa58588, $FreeObject, FreeObject };
 
 export type { $anyscalar, $anypoint, $anycontiguous, $anydiscrete, $anyreal, $anyfloat, $anyint, $anynumeric };
 
@@ -5270,8 +5284,8 @@ type __defaultExports = {
   "str": typeof str;
   "uuid": typeof uuid;
   "BaseObject": typeof BaseObject;
-  "FreeObject": typeof FreeObject;
   "Object": typeof Object_8ce8c71ee4fa5f73840c22d7eaa58588;
+  "FreeObject": typeof FreeObject;
   "assert_single": typeof assert_single;
   "assert_exists": typeof assert_exists;
   "assert_distinct": typeof assert_distinct;
@@ -5396,8 +5410,8 @@ const __defaultExports: __defaultExports = {
   "str": str,
   "uuid": uuid,
   "BaseObject": BaseObject,
-  "FreeObject": FreeObject,
   "Object": Object_8ce8c71ee4fa5f73840c22d7eaa58588,
+  "FreeObject": FreeObject,
   "assert_single": assert_single,
   "assert_exists": assert_exists,
   "assert_distinct": assert_distinct,
