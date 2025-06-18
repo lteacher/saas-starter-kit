@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 import { db } from '@saas-starter/db';
 import { hashPassword, verifyPassword } from '../utils/password';
-import { registerSchema, loginSchema } from '@saas-starter/schemas/auth';
+import { registerSchema, loginSchema } from '@saas-starter/schemas';
 import { findUserByEmail, createUser, updateLastLogin } from '../lib/user';
 import { ConflictError, UnauthorizedError, InternalServerError } from '../lib/errors';
 
@@ -19,8 +19,6 @@ export const authHandler = new Elysia({ prefix: '/auth' })
         email: body.email,
         username: body.username,
         passwordHash,
-        firstName: body.firstName,
-        lastName: body.lastName,
       }).run(db);
 
       return {

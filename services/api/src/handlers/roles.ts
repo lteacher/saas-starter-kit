@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 import { db } from '@saas-starter/db';
-import { createRoleSchema, updateRoleSchema, assignPermissionsSchema } from '@saas-starter/schemas/roles';
+import { createRoleSchema, updateRoleSchema, assignPermissionsSchema } from '@saas-starter/schemas';
 import { listRoles, findRoleById, findRoleByName, createRole, updateRole, assignPermissionsToRole } from '../lib/role';
 import { NotFoundError, ConflictError } from '../lib/errors';
 

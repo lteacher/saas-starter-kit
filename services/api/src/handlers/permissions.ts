@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 import { db } from '@saas-starter/db';
-import { createPermissionSchema, updatePermissionSchema } from '@saas-starter/schemas/permissions';
+import { createPermissionSchema, updatePermissionSchema } from '@saas-starter/schemas';
 import { listPermissions, findPermissionById, findPermissionByResourceAction, createPermission, updatePermission } from '../lib/permission';
 import { NotFoundError, ConflictError } from '../lib/errors';
 

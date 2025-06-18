@@ -8,7 +8,7 @@
     "db:stop": "docker-compose down",
     "db:migrate": "gel migrate",
     "db:seed": "gel query --file dbschema/seed.edgeql",
-    "db:generate": "@gel/generate edgeql-js --target=ts",
+    "db:generate": "@gel/generate edgeql-js --target=ts && @gel/generate interfaces",
     "db:reset": "gel database wipe --non-interactive && gel migrate && bun run db:seed",
     "postinstall": "bun run db:generate"
   },

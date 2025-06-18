@@ -48,13 +48,15 @@ export const createUser = (userData: {
   email: string;
   username: string;
   passwordHash: string;
-  firstName: string;
-  lastName: string;
 }) =>
-  e.insert(e.User, {
+  e.select(e.insert(e.User, {
     ...userData,
     roles: e.select(e.Role, role => ({ filter_single: { name: 'user' } })),
-  });
+  }), user => ({
+    id: true,
+    email: true,
+    username: true,
+  }));
 
 // Update user's last login timestamp to current time
 export const updateLastLogin = (userId: string) =>

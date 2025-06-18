@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 import { db } from '@saas-starter/db';
-import { updateUserSchema, getUsersSchema } from '@saas-starter/schemas/users';
+import { updateUserSchema, getUsersSchema } from '@saas-starter/schemas';
 import { findUserById, updateUser, listUsers } from '../lib/user';
 import { NotFoundError } from '../lib/errors';
 
