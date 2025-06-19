@@ -88,6 +88,6 @@ export const listUsers = (limit?: number, offset?: number) =>
     createdAt: true,
     roles: { name: true },
     order_by: user.createdAt,
-    limit,
-    offset,
+    ...(limit && { limit }),
+    ...(offset && { offset }),
   }));

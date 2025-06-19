@@ -4,20 +4,20 @@ import * as $ from "../reflection";
 import * as _ from "../imports";
 import type * as _std from "./std";
 export type $AuditLogλShape = $.typeutil.flatten<_std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588λShape & {
+  "resource": $.PropertyDesc<_std.$str, $.Cardinality.One, false, false, false, false>;
+  "resourceId": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
+  "userAgent": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "action": $.PropertyDesc<_std.$str, $.Cardinality.One, false, false, false, false>;
   "createdAt": $.PropertyDesc<_std.$datetime, $.Cardinality.One, false, false, false, true>;
   "ipAddress": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "newValues": $.PropertyDesc<_std.$json, $.Cardinality.AtMostOne, false, false, false, false>;
   "oldValues": $.PropertyDesc<_std.$json, $.Cardinality.AtMostOne, false, false, false, false>;
-  "resource": $.PropertyDesc<_std.$str, $.Cardinality.One, false, false, false, false>;
-  "resourceId": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
-  "userAgent": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "user": $.LinkDesc<$User, $.Cardinality.One, {}, false, false,  false, false>;
 }>;
 type $AuditLog = $.ObjectType<"default::AuditLog", $AuditLogλShape, null, [
   ..._std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588['__exclusives__'],
 ], "default::AuditLog">;
-const $AuditLog = $.makeType<$AuditLog>(_.spec, "87023d71-4b5e-11f0-b947-e940afa08b7a", _.syntax.literal);
+const $AuditLog = $.makeType<$AuditLog>(_.spec, "4beccd05-4cf7-11f0-8cf3-9f46070d9b33", _.syntax.literal);
 
 const AuditLog: $.$expr_PathNode<$.TypeSet<$AuditLog, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($AuditLog, $.Cardinality.Many), null);
 
@@ -36,7 +36,7 @@ type $Permission = $.ObjectType<"default::Permission", $PermissionλShape, null,
   {resource: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },action: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
   {name: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
 ], "default::Permission">;
-const $Permission = $.makeType<$Permission>(_.spec, "872700b8-4b5e-11f0-80e5-7dd8af3830be", _.syntax.literal);
+const $Permission = $.makeType<$Permission>(_.spec, "4c0a29e7-4cf7-11f0-bf66-11096195942a", _.syntax.literal);
 
 const Permission: $.$expr_PathNode<$.TypeSet<$Permission, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($Permission, $.Cardinality.Many), null);
 
@@ -55,7 +55,7 @@ type $Role = $.ObjectType<"default::Role", $RoleλShape, null, [
   ..._std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588['__exclusives__'],
   {name: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
 ], "default::Role">;
-const $Role = $.makeType<$Role>(_.spec, "873a8d67-4b5e-11f0-a10e-e3af3730f1a1", _.syntax.literal);
+const $Role = $.makeType<$Role>(_.spec, "4c22a322-4cf7-11f0-bdb7-59204f154361", _.syntax.literal);
 
 const Role: $.$expr_PathNode<$.TypeSet<$Role, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($Role, $.Cardinality.Many), null);
 
@@ -89,7 +89,7 @@ type $User = $.ObjectType<"default::User", $UserλShape, null, [
   {username: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
   {email: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
 ], "default::User">;
-const $User = $.makeType<$User>(_.spec, "8706c208-4b5e-11f0-8f13-89b7d4bebf8e", _.syntax.literal);
+const $User = $.makeType<$User>(_.spec, "4bf4252b-4cf7-11f0-b583-7b763b8e4edd", _.syntax.literal);
 
 const User: $.$expr_PathNode<$.TypeSet<$User, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($User, $.Cardinality.Many), null);
 
@@ -111,7 +111,7 @@ type $UserSession = $.ObjectType<"default::UserSession", $UserSessionλShape, nu
   {refreshToken: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
   {sessionToken: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
 ], "default::UserSession">;
-const $UserSession = $.makeType<$UserSession>(_.spec, "874b9d5a-4b5e-11f0-9a20-d7d77f08cf7f", _.syntax.literal);
+const $UserSession = $.makeType<$UserSession>(_.spec, "4c489eee-4cf7-11f0-a0bd-9fa460ff4fdc", _.syntax.literal);
 
 const UserSession: $.$expr_PathNode<$.TypeSet<$UserSession, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($UserSession, $.Cardinality.Many), null);
 

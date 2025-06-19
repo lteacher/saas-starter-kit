@@ -4673,16 +4673,11 @@ type to_bytesλFuncExpr<
   $bytes, $.cardutil.paramCardinality<P1>
 >;
 type to_bytesλFuncExpr2<
-  P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$json>>,
-> = $.$expr_Function<
-  $bytes, $.cardutil.paramCardinality<P1>
->;
-type to_bytesλFuncExpr3<
   P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$uuid>>,
 > = $.$expr_Function<
   $bytes, $.cardutil.paramCardinality<P1>
 >;
-type to_bytesλFuncExpr4<
+type to_bytesλFuncExpr3<
   P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$number>>,
   P2 extends _.castMaps.orScalarLiteral<$.TypeSet<$Endian>>,
 > = $.$expr_Function<
@@ -4697,21 +4692,13 @@ function to_bytes<
   s: P1,
 ): to_bytesλFuncExpr<P1>;
 /**
- * Convert a json value to a binary UTF-8 string.
- */
-function to_bytes<
-  P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$json>>,
->(
-  j: P1,
-): to_bytesλFuncExpr2<P1>;
-/**
  * Convert an UUID to binary format.
  */
 function to_bytes<
   P1 extends _.castMaps.orScalarLiteral<$.TypeSet<$uuid>>,
 >(
   val: P1,
-): to_bytesλFuncExpr3<P1>;
+): to_bytesλFuncExpr2<P1>;
 /**
  * Convert an int16 using specified endian binary format.
  */
@@ -4721,11 +4708,10 @@ function to_bytes<
 >(
   val: P1,
   endian: P2,
-): to_bytesλFuncExpr4<P1, P2>;
+): to_bytesλFuncExpr3<P1, P2>;
 function to_bytes(...args: any[]) {
   const {returnType, cardinality, args: positionalArgs, namedArgs} = _.syntax.$resolveOverload('std::to_bytes', args, _.spec, [
     {args: [{typeId: "00000000-0000-0000-0000-000000000101", optional: false, setoftype: false, variadic: false}], returnTypeId: "00000000-0000-0000-0000-000000000102"},
-    {args: [{typeId: "00000000-0000-0000-0000-00000000010f", optional: false, setoftype: false, variadic: false}], returnTypeId: "00000000-0000-0000-0000-000000000102"},
     {args: [{typeId: "00000000-0000-0000-0000-000000000100", optional: false, setoftype: false, variadic: false}], returnTypeId: "00000000-0000-0000-0000-000000000102"},
     {args: [{typeId: "00000000-0000-0000-0000-0000000001ff", optional: false, setoftype: false, variadic: false}, {typeId: "e4a1d11b-227e-5744-a0c9-31f9cd756e7b", optional: false, setoftype: false, variadic: false}], returnTypeId: "00000000-0000-0000-0000-000000000102"},
   ]);
