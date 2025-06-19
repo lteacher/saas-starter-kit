@@ -27,18 +27,22 @@
     "@builder.io/qwik-city": "^1.14.1",
     "@elysiajs/eden": "^1.0.0",
     "@eslint/js": "latest",
+    "@saas-starter/api": "workspace:*",
+    "@saas-starter/schemas": "workspace:*",
+    "@saas-starter/types": "workspace:*",
+    "@saas-starter/utils": "workspace:*",
+    "@tailwindcss/vite": "^4.1.10",
     "@types/node": "20.14.11",
+    "daisyui": "^5.0.43",
     "eslint": "9.25.1",
     "eslint-plugin-qwik": "^1.14.1",
     "globals": "16.0.0",
     "prettier": "3.3.3",
+    "tailwindcss": "^4.1.10",
     "typescript": "5.4.5",
     "typescript-eslint": "8.26.1",
     "undici": "*",
     "vite": "5.3.5",
-    "vite-tsconfig-paths": "^4.2.1",
-    "@saas-starter/schemas": "workspace:*",
-    "@saas-starter/utils": "workspace:*",
-    "@saas-starter/api": "workspace:*"
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }
