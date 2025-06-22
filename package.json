@@ -10,7 +10,11 @@
   ],
   "scripts": {
     "dev": "bun run --filter='./apps/*' dev & bun run --filter='./services/*' dev",
+    "dev:ui": "bun run --filter='./apps/ui' dev",
+    "dev:api": "bun run --filter='./services/api' dev",
     "build": "bun run --filter='./packages/*' build && bun run --filter='./apps/*' build && bun run --filter='./services/*' build",
+    "build:ui": "bun run --filter='./apps/ui' build",
+    "build:api": "bun run --filter='./services/api' build",
     "lint": "bun run --filter='*' lint",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

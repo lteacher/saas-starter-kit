@@ -45,8 +45,13 @@ export const findRoleByName = (name: string) =>
 export const createRole = (roleData: {
   name: string;
   description?: string;
+  isActive?: boolean;
 }) =>
-  e.insert(e.Role, roleData);
+  e.insert(e.Role, {
+    name: roleData.name.toLowerCase().replace(/[^a-z_]/g, '_'),
+    description: roleData.description,
+    isActive: roleData.isActive ?? true,
+  });
 
 // Update role information
 export const updateRole = (roleId: string, updates: {
@@ -63,7 +68,7 @@ export const assignPermissionsToRole = (roleId: string, permissionIds: string[])
   e.update(e.Role, role => ({
     filter_single: { id: roleId },
     set: {
-      permissions: { '+=': e.select(e.Permission, perm => ({ filter: e.op(perm.id, 'in', e.set(...permissionIds)) })) },
+      permissions: { '+=': e.select(e.Permission, perm => ({ filter: e.op(perm.id, 'in', e.cast(e.uuid, e.set(...permissionIds))) })) },
     },
   }));
 
@@ -72,6 +77,6 @@ export const removePermissionsFromRole = (roleId: string, permissionIds: string[
   e.update(e.Role, role => ({
     filter_single: { id: roleId },
     set: {
-      permissions: { '-=': e.select(e.Permission, perm => ({ filter: e.op(perm.id, 'in', e.set(...permissionIds)) })) },
+      permissions: { '-=': e.select(e.Permission, perm => ({ filter: e.op(perm.id, 'in', e.cast(e.uuid, e.set(...permissionIds))) })) },
     },
   }));

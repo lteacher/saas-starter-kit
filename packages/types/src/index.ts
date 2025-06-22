@@ -42,6 +42,16 @@ export interface AuthState {
   isLoading: boolean;
 }
 
+// Role and Permission Management types
+export interface RoleWithStats extends Role {
+  userCount: number;
+}
+
+export interface PermissionGroup {
+  resource: string;
+  permissions: Permission[];
+}
+
 // API Response types
 export interface LoginResponse {
   user: AuthUser;

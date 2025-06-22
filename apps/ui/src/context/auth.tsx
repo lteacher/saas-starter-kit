@@ -54,9 +54,16 @@ export const createAuthContext = (): AuthContext => {
       
       if (response.data && 'user' in response.data) {
         const user = response.data.user as AuthUser;
+        
         if (isBrowser) {
+          // Store in localStorage for client-side persistence
           localStorage.setItem('auth_user', JSON.stringify(user));
+          
+          // Set HTTP-only cookies for server-side validation
+          document.cookie = `auth_user=${JSON.stringify(user)}; path=/; max-age=86400; SameSite=Strict`;
+          document.cookie = `auth_token=authenticated; path=/; max-age=86400; SameSite=Strict`;
         }
+        
         state.value = {
           user,
           isAuthenticated: true,
