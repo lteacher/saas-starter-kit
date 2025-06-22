@@ -1,0 +1,9 @@
+[instance]
+server-version = "6.8"
+
+[project]
+schema-dir = "dbschema"
+
+[[watch]]
+files = ["queries/*.edgeql"]
+script = "bun run db:generate"

@@ -1,15 +1,78 @@
-# saas-starter-kit
+# SaaS Starter Kit
 
-To install dependencies:
+A modern full-stack template with authentication, RBAC, and admin UI.
+
+## Tech Stack
+
+- **Frontend**: Qwik + Qwik City + TailwindCSS v4 + DaisyUI
+- **Backend**: Elysia + Bun
+- **Database**: EdgeDB
+- **Types**: Shared TypeScript types across frontend/backend
+
+## Architecture
+
+```
+apps/ui/          # Qwik frontend with server-side auth
+services/api/     # Elysia backend with RBAC
+packages/db/      # EdgeDB schema and migrations
+packages/types/   # Shared TypeScript types
+packages/schemas/ # Shared validation schemas
+```
+
+## Quick Start
 
 ```bash
 bun install
+
+# Setup database
+cd packages/db
+edgedb project init
+edgedb migrate
+
+# Start development
+bun dev  # Frontend: :5173, Backend: :3000
 ```
 
-To run:
+## Environment
 
 ```bash
-bun run index.ts
+# apps/ui/.env.local
+VITE_API_URL=http://localhost:3000
+
+# services/api/.env
+JWT_SECRET=your-secret-key
+FRONTEND_URL=http://localhost:5173
 ```
 
-This project was created using `bun init` in bun v1.1.36. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## What's Included
+
+- **Authentication**: Register/login with JWT
+- **RBAC**: Users, roles, permissions with UI management
+- **Protected Routes**: Server-side route protection
+- **Admin UI**: User and role management interface
+- **Type Safety**: End-to-end TypeScript with Eden Treaty client
+
+## Key Features
+
+- Server-side auth with Qwik layouts
+- Composable UI components following Qwik best practices
+- Real API integration (no mock data)
+- Responsive dashboard with collapsible sidebar
+- Form handling with validation and error states
+
+## Scripts
+
+```bash
+bun dev           # Start all services
+bun build         # Build all packages
+bun lint          # Lint all code
+bun format        # Format with Prettier
+```
+
+## Database Schema
+
+Default entities: User, Role, Permission, UserSession, AuditLog with proper constraints and relationships.
+
+---
+
+Built with Qwik's resumability, Elysia's performance, and EdgeDB's type safety.

@@ -1,20 +1,31 @@
 {
   "name": "saas-starter-kit",
+  "version": "1.0.0",
   "private": true,
-  "workspaces": ["apps/*"],
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev:frontend": "bun run --filter=frontend dev",
-    "dev:backend": "bun run --filter=backend dev",
-    "dev": "bun run --filter=* dev",
-    "infra:up": "docker compose -f infra/docker-compose.yml up -d"
+    "dev": "bun run --filter='./apps/*' dev & bun run --filter='./services/*' dev",
+    "dev:ui": "bun run --filter='./apps/ui' dev",
+    "dev:api": "bun run --filter='./services/api' dev",
+    "build": "bun run --filter='./packages/*' build && bun run --filter='./apps/*' build && bun run --filter='./services/*' build",
+    "build:ui": "bun run --filter='./apps/ui' build",
+    "build:api": "bun run --filter='./services/api' build",
+    "lint": "bun run --filter='*' lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "eslint": "^8.0.0",
-    "jest": "^29.0.0",
-    "prettier": "^3.4.2"
+    "husky": "^9.1.7",
+    "prettier": "^3.5.3",
+    "typescript": "^5.4.5"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+  "lint-staged": {
+    "*.{js,css,md,ts,tailwindcss}": "prettier --write"
   }
 }

@@ -1,0 +1,138 @@
+module default {
+  type User {
+    required email: str {
+      constraint exclusive;
+      constraint regexp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    };
+    required passwordHash: str;
+    required username: str {
+      constraint exclusive;
+      constraint min_len_value(3);
+      constraint max_len_value(50);
+    };
+    
+    firstName: str;
+    lastName: str;
+    avatarUrl: str;
+    
+    required isActive: bool {
+      default := true;
+    };
+    required isVerified: bool {
+      default := false;
+    };
+    required createdAt: datetime {
+      default := datetime_current();
+    };
+    updatedAt: datetime;
+    lastLoginAt: datetime;
+    
+    passwordResetToken: str;
+    passwordResetExpires: datetime;
+    emailVerificationToken: str;
+    emailVerifiedAt: datetime;
+    
+    multi roles: Role;
+    multi sessions: UserSession;
+    
+    fullName := .firstName ++ ' ' ++ .lastName if exists .firstName and exists .lastName else .username;
+    
+    index on (.email);
+    index on (.username);
+    index on (.passwordResetToken);
+    index on (.emailVerificationToken);
+  }
+  
+  type Role {
+    required name: str {
+      constraint exclusive;
+    };
+    description: str;
+    required isActive: bool {
+      default := true;
+    };
+    required createdAt: datetime {
+      default := datetime_current();
+    };
+    
+    multi permissions: Permission;
+    multi users := .<roles[is User];
+    
+    constraint expression on (
+      .name = 'admin' or
+      .name = 'moderator' or
+      .name = 'user' or
+      .name = 'guest' or
+      re_test(r'^[a-z_]+$', .name)
+    );
+  }
+  
+  type Permission {
+    required name: str {
+      constraint exclusive;
+    };
+    required resource: str;
+    required action: str;
+    description: str;
+    required createdAt: datetime {
+      default := datetime_current();
+    };
+    
+    multi roles := .<permissions[is Role];
+    
+    constraint expression on (
+      re_test(r'^[a-z_]+$', .name) and
+      re_test(r'^[a-z_]+$', .resource) and
+      (
+        .action = 'create' or
+        .action = 'read' or
+        .action = 'update' or
+        .action = 'delete' or
+        .action = 'manage'
+      )
+    );
+    
+    constraint exclusive on ((.resource, .action));
+  }
+  
+  type UserSession {
+    required user: User;
+    required sessionToken: str {
+      constraint exclusive;
+    };
+    refreshToken: str {
+      constraint exclusive;
+    };
+    required createdAt: datetime {
+      default := datetime_current();
+    };
+    required expiresAt: datetime;
+    lastAccessedAt: datetime;
+    ipAddress: str;
+    userAgent: str;
+    required isActive: bool {
+      default := true;
+    };
+    
+    index on (.sessionToken);
+    index on (.refreshToken);
+    index on ((.user,.isActive));
+  }
+  
+  type AuditLog {
+    required user: User;
+    required action: str;
+    required resource: str;
+    resourceId: str;
+    oldValues: json;
+    newValues: json;
+    ipAddress: str;
+    userAgent: str;
+    required createdAt: datetime {
+      default := datetime_current();
+    };
+    
+    index on ((.user, .createdAt));
+    index on ((.action, .createdAt));
+  }
+}
