@@ -224,10 +224,10 @@ export namespace $default {
     "users": User[];
   }
   export interface User extends std.$Object {
-    "passwordResetToken"?: string | null;
     "emailVerificationToken"?: string | null;
     "username": string;
     "email": string;
+    "passwordResetToken"?: string | null;
     "avatarUrl"?: string | null;
     "createdAt": Date;
     "emailVerifiedAt"?: Date | null;

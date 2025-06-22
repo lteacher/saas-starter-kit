@@ -8,7 +8,7 @@
     "db:stop": "docker-compose down",
     "db:migrate": "gel migrate -P 5656",
     "db:seed": "gel query --file dbschema/seed.edgeql -P 5656 --tls-security=insecure",
-    "db:generate": "@gel/generate edgeql-js --target=ts -P 5656 --tls-security=insecure && @gel/generate interfaces -P 5656 --tls-security=insecure",
+    "db:generate": "generate edgeql-js --target=ts -P 5656 --tls-security=insecure && generate interfaces -P 5656 --tls-security=insecure",
     "db:wipe": "gel branch wipe main -P 5656 --non-interactive --tls-security=insecure",
     "db:reset": "gel branch wipe main -P 5656 --non-interactive --tls-security=insecure && gel migrate -P 5656 --tls-security=insecure && bun run db:seed",
     "postinstall": "bun run db:generate"
