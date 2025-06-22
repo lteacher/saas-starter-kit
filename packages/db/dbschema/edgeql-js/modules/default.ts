@@ -4,20 +4,20 @@ import * as $ from "../reflection";
 import * as _ from "../imports";
 import type * as _std from "./std";
 export type $AuditLogλShape = $.typeutil.flatten<_std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588λShape & {
-  "resource": $.PropertyDesc<_std.$str, $.Cardinality.One, false, false, false, false>;
-  "resourceId": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
-  "userAgent": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "action": $.PropertyDesc<_std.$str, $.Cardinality.One, false, false, false, false>;
   "createdAt": $.PropertyDesc<_std.$datetime, $.Cardinality.One, false, false, false, true>;
   "ipAddress": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "newValues": $.PropertyDesc<_std.$json, $.Cardinality.AtMostOne, false, false, false, false>;
   "oldValues": $.PropertyDesc<_std.$json, $.Cardinality.AtMostOne, false, false, false, false>;
+  "resource": $.PropertyDesc<_std.$str, $.Cardinality.One, false, false, false, false>;
+  "resourceId": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
+  "userAgent": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "user": $.LinkDesc<$User, $.Cardinality.One, {}, false, false,  false, false>;
 }>;
 type $AuditLog = $.ObjectType<"default::AuditLog", $AuditLogλShape, null, [
   ..._std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588['__exclusives__'],
 ], "default::AuditLog">;
-const $AuditLog = $.makeType<$AuditLog>(_.spec, "4beccd05-4cf7-11f0-8cf3-9f46070d9b33", _.syntax.literal);
+const $AuditLog = $.makeType<$AuditLog>(_.spec, "7068308e-4cfc-11f0-827f-bfd2cd315d4b", _.syntax.literal);
 
 const AuditLog: $.$expr_PathNode<$.TypeSet<$AuditLog, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($AuditLog, $.Cardinality.Many), null);
 
@@ -36,7 +36,7 @@ type $Permission = $.ObjectType<"default::Permission", $PermissionλShape, null,
   {resource: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },action: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
   {name: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
 ], "default::Permission">;
-const $Permission = $.makeType<$Permission>(_.spec, "4c0a29e7-4cf7-11f0-bf66-11096195942a", _.syntax.literal);
+const $Permission = $.makeType<$Permission>(_.spec, "7080b4c7-4cfc-11f0-9def-8b9c9b93ea5c", _.syntax.literal);
 
 const Permission: $.$expr_PathNode<$.TypeSet<$Permission, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($Permission, $.Cardinality.Many), null);
 
@@ -55,15 +55,15 @@ type $Role = $.ObjectType<"default::Role", $RoleλShape, null, [
   ..._std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588['__exclusives__'],
   {name: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
 ], "default::Role">;
-const $Role = $.makeType<$Role>(_.spec, "4c22a322-4cf7-11f0-bdb7-59204f154361", _.syntax.literal);
+const $Role = $.makeType<$Role>(_.spec, "7094e912-4cfc-11f0-9738-173b645581c2", _.syntax.literal);
 
 const Role: $.$expr_PathNode<$.TypeSet<$Role, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($Role, $.Cardinality.Many), null);
 
 export type $UserλShape = $.typeutil.flatten<_std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588λShape & {
-  "passwordResetToken": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "emailVerificationToken": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "username": $.PropertyDesc<_std.$str, $.Cardinality.One, true, false, false, false>;
   "email": $.PropertyDesc<_std.$str, $.Cardinality.One, true, false, false, false>;
+  "passwordResetToken": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "avatarUrl": $.PropertyDesc<_std.$str, $.Cardinality.AtMostOne, false, false, false, false>;
   "createdAt": $.PropertyDesc<_std.$datetime, $.Cardinality.One, false, false, false, true>;
   "emailVerifiedAt": $.PropertyDesc<_std.$datetime, $.Cardinality.AtMostOne, false, false, false, false>;
@@ -86,10 +86,10 @@ export type $UserλShape = $.typeutil.flatten<_std.$Object_8ce8c71ee4fa5f73840c2
 }>;
 type $User = $.ObjectType<"default::User", $UserλShape, null, [
   ..._std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588['__exclusives__'],
-  {username: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
   {email: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
+  {username: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
 ], "default::User">;
-const $User = $.makeType<$User>(_.spec, "4bf4252b-4cf7-11f0-b583-7b763b8e4edd", _.syntax.literal);
+const $User = $.makeType<$User>(_.spec, "706d23dd-4cfc-11f0-928e-4587a105aaf9", _.syntax.literal);
 
 const User: $.$expr_PathNode<$.TypeSet<$User, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($User, $.Cardinality.Many), null);
 
@@ -108,10 +108,10 @@ export type $UserSessionλShape = $.typeutil.flatten<_std.$Object_8ce8c71ee4fa5f
 }>;
 type $UserSession = $.ObjectType<"default::UserSession", $UserSessionλShape, null, [
   ..._std.$Object_8ce8c71ee4fa5f73840c22d7eaa58588['__exclusives__'],
-  {refreshToken: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
   {sessionToken: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
+  {refreshToken: {__element__: _std.$str, __cardinality__: $.Cardinality.One | $.Cardinality.AtMostOne },},
 ], "default::UserSession">;
-const $UserSession = $.makeType<$UserSession>(_.spec, "4c489eee-4cf7-11f0-a0bd-9fa460ff4fdc", _.syntax.literal);
+const $UserSession = $.makeType<$UserSession>(_.spec, "70a6a65a-4cfc-11f0-b96a-1936fed0dfaa", _.syntax.literal);
 
 const UserSession: $.$expr_PathNode<$.TypeSet<$UserSession, $.Cardinality.Many>, null> = _.syntax.$PathNode($.$toSet($UserSession, $.Cardinality.Many), null);
 

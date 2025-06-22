@@ -27,5 +27,11 @@
   },
   "lint-staged": {
     "*.{js,css,md,ts,tailwindcss}": "prettier --write"
+  },
+  "bun-create": {
+    "postinstall": [
+      "node scripts/setup.js",
+      "rm -rf ./scripts"
+    ]
   }
 }
