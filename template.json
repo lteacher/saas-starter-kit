@@ -1,0 +1,31 @@
+{
+  "name": "SaaS Starter Kit",
+  "description": "Modern full-stack SaaS template with Qwik, Elysia, and EdgeDB",
+  "prompts": [
+    {
+      "name": "projectName",
+      "message": "Project name (lowercase, hyphens only):",
+      "default": "{{dir}}",
+      "validate": "^[a-z0-9-]+$"
+    }
+  ],
+  "files": {
+    "**/*.{ts,tsx,js,jsx,json,md,toml,env,example}": {
+      "replace": {
+        "saas-starter-kit": "{{projectName}}",
+        "@saas-starter": "@{{projectName}}",
+        "SaaS Starter Kit": "{{projectName | titleCase}}"
+      }
+    }
+  },
+  "ignore": [
+    "node_modules/**",
+    "dist/**", 
+    "build/**",
+    "tmp/**",
+    ".git/**",
+    ".edgedb/**",
+    "bun.lock",
+    "*.tsbuildinfo"
+  ]
+}
