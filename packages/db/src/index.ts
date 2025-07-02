@@ -1,26 +1,9 @@
-import { createClient } from 'gel';
+import { ConvexClient } from "convex/browser";
+import { api } from "../convex/_generated/api";
 
-// Create and configure the database client
-export const createDbClient = () => {
-  return createClient({
-    dsn: process.env.DATABASE_URL,
-  });
-};
+const convexUrl = process.env.CONVEX_URL || "http://localhost:3210";
 
-// Default client instance
-export const db = createDbClient();
+export const db = new ConvexClient(convexUrl);
 
-// Database connection health check
-export const checkConnection = async (): Promise<boolean> => {
-  await db.querySingle('SELECT 1');
-  return true;
-};
-
-
-// Export the generated EdgeQL query builder
-export { default as e } from '../dbschema/edgeql-js';
-
-// Export generated TypeScript interfaces
-export * from '../dbschema/interfaces';
-
-export default db;
+// Re-export the generated API types for convenience
+export { api };

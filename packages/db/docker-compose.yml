@@ -1,9 +1,59 @@
+version: "3.8"
+
 services:
-  gel:
-    image: geldata/gel
+  postgres:
+    image: postgres:15
+    restart: always
     environment:
-      GEL_SERVER_SECURITY: insecure_dev_mode
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - POSTGRES_DB=${POSTGRES_DB:-convex}
     volumes:
-      - './dbschema:/dbschema'
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-convex}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: ghcr.io/get-convex/convex-backend:c1a7ac393888d743e704de56cf569a154b4526d4
+    restart: always
+    stop_grace_period: 10s
+    stop_signal: SIGINT
     ports:
-      - '5656:5656'
+      - "${CONVEX_BACKEND_PORT:-3210}:3210"
+    volumes:
+      - convex_data:/convex/data
+    environment:
+      - INSTANCE_NAME=${INSTANCE_NAME}
+      - INSTANCE_SECRET=${INSTANCE_SECRET}
+      - CONVEX_CLOUD_ORIGIN=http://localhost:${CONVEX_BACKEND_PORT:-3210}
+      - CONVEX_SITE_ORIGIN=http://localhost:${CONVEX_BACKEND_PORT:-3210}
+      - POSTGRES_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@postgres:5432
+      - DO_NOT_REQUIRE_SSL=true
+      - RUST_LOG=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: curl -f http://localhost:3210/version
+      interval: 5s
+      start_period: 10s
+
+  dashboard:
+    image: ghcr.io/get-convex/convex-dashboard:c1a7ac393888d743e704de56cf569a154b4526d4
+    restart: always
+    stop_grace_period: 10s
+    stop_signal: SIGINT
+    ports:
+      - "${CONVEX_DASHBOARD_PORT:-6791}:6791"
+    environment:
+      - NEXT_PUBLIC_DEPLOYMENT_URL=http://localhost:${CONVEX_BACKEND_PORT:-3210}
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  convex_data:

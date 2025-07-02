@@ -1,15 +1,17 @@
 import { Elysia } from 'elysia';
-import { db } from '@saas-starter/db';
+import { db, api } from '@saas-starter/db';
 import { updateUserSchema, getUsersSchema } from '@saas-starter/schemas';
-import { findUserById, updateUser, listUsers } from '../lib/user';
 import { NotFoundError } from '../lib/errors';
 
 export const userHandler = new Elysia({ prefix: '/users' })
   .get(
     '/',
     async ({ query }) => {
-      const users = await listUsers(query.limit, query.offset).run(db);
-      return { users };
+      const users = await db.query(api.users.listUsers, { 
+        paginationOpts: { limit: query.limit, offset: query.offset }
+      });
+      const formattedUsers = users.map(user => ({ ...user, id: user._id }));
+      return { users: formattedUsers };
     },
     {
       query: getUsersSchema,
@@ -19,11 +21,11 @@ export const userHandler = new Elysia({ prefix: '/users' })
   .get(
     '/:id',
     async ({ params }) => {
-      const user = await findUserById(params.id).run(db);
+      const user = await db.query(api.users.findUserById, { id: params.id as any });
 
       if (!user) throw new NotFoundError('User');
 
-      return { user };
+      return { user: { ...user, id: user._id } };
     },
     {
       detail: { tags: ['Users'] },
@@ -32,13 +34,15 @@ export const userHandler = new Elysia({ prefix: '/users' })
   .patch(
     '/:id',
     async ({ params, body }) => {
-      // Verify user exists before updating
-      const existingUser = await findUserById(params.id).run(db);
+      const existingUser = await db.query(api.users.findUserById, { id: params.id as any });
 
       if (!existingUser) throw new NotFoundError('User');
 
-      const updatedUser = await updateUser(params.id, body).run(db);
-      return { user: updatedUser };
+      await db.mutation(api.users.updateUser, { userId: params.id as any, updates: body });
+      
+      const updatedUser = await db.query(api.users.findUserById, { id: params.id as any });
+
+      return { user: { ...updatedUser, id: updatedUser!._id } };
     },
     {
       body: updateUserSchema,

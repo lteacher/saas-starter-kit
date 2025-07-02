@@ -1,15 +1,15 @@
 import { Elysia } from 'elysia';
-import { db } from '@saas-starter/db';
+import { db, api } from '@saas-starter/db';
 import { createPermissionSchema, updatePermissionSchema } from '@saas-starter/schemas';
-import { listPermissions, findPermissionById, findPermissionByResourceAction, createPermission, updatePermission } from '../lib/permission';
 import { NotFoundError, ConflictError } from '../lib/errors';
 
 export const permissionHandler = new Elysia({ prefix: '/permissions' })
   .get(
     '/',
     async () => {
-      const permissions = await listPermissions().run(db);
-      return { permissions };
+      const permissions = await db.query(api.permissions.listPermissions);
+      const formattedPermissions = permissions.map(p => ({ ...p, id: p._id }));
+      return { permissions: formattedPermissions };
     },
     {
       detail: { tags: ['Permissions'] },
@@ -18,11 +18,11 @@ export const permissionHandler = new Elysia({ prefix: '/permissions' })
   .get(
     '/:id',
     async ({ params }) => {
-      const permission = await findPermissionById(params.id).run(db);
+      const permission = await db.query(api.permissions.findPermissionById, { id: params.id as any });
 
       if (!permission) throw new NotFoundError('Permission');
 
-      return { permission };
+      return { permission: { ...permission, id: permission._id } };
     },
     {
       detail: { tags: ['Permissions'] },
@@ -31,13 +31,14 @@ export const permissionHandler = new Elysia({ prefix: '/permissions' })
   .post(
     '/',
     async ({ body }) => {
-      // Only check uniqueness on creation
-      const existingPermission = await findPermissionByResourceAction(body.resource, body.action).run(db);
+      const existingPermission = await db.query(api.permissions.findPermissionByResourceAction, body);
 
       if (existingPermission) throw new ConflictError('Permission already exists', 'Resource and action combination must be unique');
 
-      const newPermission = await createPermission(body).run(db);
-      return { permission: newPermission };
+      const newPermissionId = await db.mutation(api.permissions.createPermission, body);
+      const newPermission = await db.query(api.permissions.findPermissionById, { id: newPermissionId });
+
+      return { permission: { ...newPermission, id: newPermission!._id } };
     },
     {
       body: createPermissionSchema,
@@ -47,12 +48,14 @@ export const permissionHandler = new Elysia({ prefix: '/permissions' })
   .patch(
     '/:id',
     async ({ params, body }) => {
-      const existingPermission = await findPermissionById(params.id).run(db);
+      const existingPermission = await db.query(api.permissions.findPermissionById, { id: params.id as any });
 
       if (!existingPermission) throw new NotFoundError('Permission');
 
-      const updatedPermission = await updatePermission(params.id, body).run(db);
-      return { permission: updatedPermission };
+      await db.mutation(api.permissions.updatePermission, { permissionId: params.id as any, updates: body });
+      const updatedPermission = await db.query(api.permissions.findPermissionById, { id: params.id as any });
+
+      return { permission: { ...updatedPermission, id: updatedPermission!._id } };
     },
     {
       body: updatePermissionSchema,

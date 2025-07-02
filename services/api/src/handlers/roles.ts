@@ -1,15 +1,15 @@
 import { Elysia } from 'elysia';
-import { db } from '@saas-starter/db';
+import { db, api } from '@saas-starter/db';
 import { createRoleSchema, updateRoleSchema, assignPermissionsSchema } from '@saas-starter/schemas';
-import { listRoles, findRoleById, findRoleByName, createRole, updateRole, assignPermissionsToRole } from '../lib/role';
 import { NotFoundError, ConflictError } from '../lib/errors';
 
 export const roleHandler = new Elysia({ prefix: '/roles' })
   .get(
     '/',
     async () => {
-      const roles = await listRoles().run(db);
-      return { roles };
+      const roles = await db.query(api.roles.listRoles);
+      const formattedRoles = roles.map(role => ({ ...role, id: role!._id }));
+      return { roles: formattedRoles };
     },
     {
       detail: { tags: ['Roles'] },
@@ -18,11 +18,11 @@ export const roleHandler = new Elysia({ prefix: '/roles' })
   .get(
     '/:id',
     async ({ params }) => {
-      const role = await findRoleById(params.id).run(db);
+      const role = await db.query(api.roles.findRoleById, { id: params.id as any });
 
       if (!role) throw new NotFoundError('Role');
 
-      return { role };
+      return { role: { ...role, id: role._id } };
     },
     {
       detail: { tags: ['Roles'] },
@@ -31,13 +31,14 @@ export const roleHandler = new Elysia({ prefix: '/roles' })
   .post(
     '/',
     async ({ body }) => {
-      // Check if role name already exists
-      const existingRole = await findRoleByName(body.name).run(db);
+      const existingRole = await db.query(api.roles.findRoleByName, { name: body.name });
 
       if (existingRole) throw new ConflictError('Role already exists', 'Role name must be unique');
 
-      const newRole = await createRole(body).run(db);
-      return { role: newRole };
+      const newRoleId = await db.mutation(api.roles.createRole, body);
+      const newRole = await db.query(api.roles.findRoleById, { id: newRoleId });
+
+      return { role: { ...newRole, id: newRole!._id } };
     },
     {
       body: createRoleSchema,
@@ -47,12 +48,14 @@ export const roleHandler = new Elysia({ prefix: '/roles' })
   .patch(
     '/:id',
     async ({ params, body }) => {
-      const existingRole = await findRoleById(params.id).run(db);
+      const existingRole = await db.query(api.roles.findRoleById, { id: params.id as any });
 
       if (!existingRole) throw new NotFoundError('Role');
 
-      const updatedRole = await updateRole(params.id, body).run(db);
-      return { role: updatedRole };
+      await db.mutation(api.roles.updateRole, { roleId: params.id as any, updates: body });
+      const updatedRole = await db.query(api.roles.findRoleById, { id: params.id as any });
+
+      return { role: { ...updatedRole, id: updatedRole!._id } };
     },
     {
       body: updateRoleSchema,
@@ -62,16 +65,17 @@ export const roleHandler = new Elysia({ prefix: '/roles' })
   .post(
     '/:id/permissions',
     async ({ params, body }) => {
-      // Verify role exists
-      const existingRole = await findRoleById(params.id).run(db);
+      const existingRole = await db.query(api.roles.findRoleById, { id: params.id as any });
 
       if (!existingRole) throw new NotFoundError('Role');
 
-      await assignPermissionsToRole(params.id, body.permissionIds).run(db);
+      await db.mutation(api.roles.assignPermissionsToRole, { 
+        roleId: params.id as any, 
+        permissionIds: body.permissionIds as any[]
+      });
 
-      // Return updated role with permissions
-      const updatedRole = await findRoleById(params.id).run(db);
-      return { role: updatedRole };
+      const updatedRole = await db.query(api.roles.findRoleById, { id: params.id as any });
+      return { role: { ...updatedRole, id: updatedRole!._id } };
     },
     {
       body: assignPermissionsSchema,
