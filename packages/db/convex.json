@@ -2,5 +2,6 @@
   "project": "saas-starter-kit-dev",
   "team": "",
   "prodUrl": "",
-  "functions": "./convex"
+  "functions": "./convex",
+  "localUrl": "http://localhost:3210"
 }
