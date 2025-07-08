@@ -28,8 +28,8 @@ export const Sidebar = component$(() => {
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="avatar placeholder">
-                <div class="bg-primary text-primary-content rounded-full w-8">
-                  <span class="text-lg">🚀</span>
+                <div class="bg-primary text-primary-content rounded-full w-8 h-8 flex items-center justify-center">
+                  <span class="text-base leading-none">🚀</span>
                 </div>
               </div>
               {!isCollapsed.value && (

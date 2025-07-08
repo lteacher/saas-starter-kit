@@ -31,6 +31,8 @@ function replaceInContent(content, projectName) {
     .replace(/@saas-starter/g, `@${projectName}`)
     // Project name replacements
     .replace(/saas-starter-kit/g, projectName)
+    // Docker container names
+    .replace(/saas-starter-mongodb/g, `${projectName}-mongodb`)
     // Title replacements
     .replace(/SaaS Starter Kit/g, titleName)
     // API specific replacements

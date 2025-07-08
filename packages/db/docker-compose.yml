@@ -1,9 +1,11 @@
 services:
-  gel:
-    image: geldata/gel
-    environment:
-      GEL_SERVER_SECURITY: insecure_dev_mode
-    volumes:
-      - './dbschema:/dbschema'
+  mongodb:
+    image: mongo:7.0
+    container_name: saas-starter-mongodb
+    restart: unless-stopped
     ports:
-      - '5656:5656'
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: saas_starter

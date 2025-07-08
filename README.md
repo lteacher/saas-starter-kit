@@ -6,7 +6,7 @@ A modern full-stack template with authentication, RBAC, and admin UI.
 
 - **Frontend**: Qwik + Qwik City + TailwindCSS v4 + DaisyUI
 - **Backend**: Elysia + Bun
-- **Database**: EdgeDB
+- **Database**: MongoDB
 - **Types**: Shared TypeScript types across frontend/backend
 
 ## Architecture
@@ -14,7 +14,7 @@ A modern full-stack template with authentication, RBAC, and admin UI.
 ```
 apps/ui/          # Qwik frontend with server-side auth
 services/api/     # Elysia backend with RBAC
-packages/db/      # EdgeDB schema and migrations
+packages/db/      # MongoDB connection and migrations
 packages/types/   # Shared TypeScript types
 packages/schemas/ # Shared validation schemas
 ```
@@ -26,8 +26,8 @@ bun install
 
 # Setup database
 cd packages/db
-edgedb project init
-edgedb migrate
+docker-compose up -d
+bun run db:migrate
 
 # Start development
 bun dev  # Frontend: :5173, Backend: :3000
@@ -75,4 +75,4 @@ Default entities: User, Role, Permission, UserSession, AuditLog with proper cons
 
 ---
 
-Built with Qwik's resumability, Elysia's performance, and EdgeDB's type safety.
+Built with Qwik's resumability, Elysia's performance, and MongoDB's flexibility.
