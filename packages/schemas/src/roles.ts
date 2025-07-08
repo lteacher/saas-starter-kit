@@ -9,5 +9,10 @@ export const createRoleSchema = t.Object({
 export const updateRoleSchema = t.Partial(t.Pick(RoleSchema, ['name', 'description']));
 
 export const assignPermissionsSchema = t.Object({
-  permissionIds: t.Array(t.String()),
+  permissions: t.Array(t.Object({
+    name: t.String(),
+    resource: t.String(),
+    action: t.String(),
+    description: t.Optional(t.String())
+  })),
 });

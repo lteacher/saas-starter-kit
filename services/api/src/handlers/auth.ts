@@ -1,15 +1,14 @@
 import { Elysia } from 'elysia';
-import { db } from '@saas-starter/db';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { registerSchema, loginSchema } from '@saas-starter/schemas';
-import { findUserByEmail, createUser, updateLastLogin } from '../lib/user';
+import { findUserByEmailWithRoles, createUser, updateLastLogin } from '@saas-starter/db';
 import { ConflictError, UnauthorizedError, InternalServerError } from '../lib/errors';
 
 export const authHandler = new Elysia({ prefix: '/auth' })
   .post(
     '/register',
     async ({ body }) => {
-      const existingUser = await findUserByEmail(body.email).run(db);
+      const existingUser = await findUserByEmailWithRoles(body.email);
 
       if (existingUser) throw new ConflictError('User already exists', 'Email is already registered');
 
@@ -19,12 +18,13 @@ export const authHandler = new Elysia({ prefix: '/auth' })
         email: body.email,
         username: body.username,
         passwordHash,
-      }).run(db);
+      });
 
+      const { _id, ...userData } = newUser;
       return {
-        id: newUser.id,
-        email: newUser.email,
-        username: newUser.username,
+        id: `${_id}`,
+        email: userData.email,
+        username: userData.username,
       };
     },
     {
@@ -35,7 +35,7 @@ export const authHandler = new Elysia({ prefix: '/auth' })
   .post(
     '/login',
     async ({ body }) => {
-      const user = await findUserByEmail(body.email).run(db);
+      const user = await findUserByEmailWithRoles(body.email);
 
       if (!user || !user.isActive) throw new UnauthorizedError('Invalid credentials');
 
@@ -43,13 +43,14 @@ export const authHandler = new Elysia({ prefix: '/auth' })
 
       if (!isValidPassword) throw new UnauthorizedError('Invalid credentials');
 
-      await updateLastLogin(user.id).run(db);
+      await updateLastLogin(`${user._id}`);
 
+      const { _id: userId, ...userInfo } = user;
       return {
         user: {
-          id: user.id,
-          email: user.email,
-          username: user.username,
+          id: `${userId}`,
+          email: userInfo.email,
+          username: userInfo.username,
           roles: user.roles.map(role => ({
             name: role.name,
             permissions: role.permissions,

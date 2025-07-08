@@ -1,15 +1,30 @@
 import { Elysia } from 'elysia';
-import { db } from '@saas-starter/db';
 import { updateUserSchema, getUsersSchema } from '@saas-starter/schemas';
-import { findUserById, updateUser, listUsers } from '../lib/user';
+import { findUserByIdWithRoles, updateUser, listUsersWithRoles } from '@saas-starter/db';
 import { NotFoundError } from '../lib/errors';
 
 export const userHandler = new Elysia({ prefix: '/users' })
   .get(
     '/',
     async ({ query }) => {
-      const users = await listUsers(query.limit, query.offset).run(db);
-      return { users };
+      const result = await listUsersWithRoles({ limit: query.limit, offset: query.offset });
+      return { 
+        users: result.users.map(user => {
+          const { _id: userId, ...userData } = user;
+          return {
+            ...userData,
+            id: `${userId}`,
+            roles: user.roles.map(role => {
+              const { _id: roleId, ...roleData } = role;
+              return {
+                ...roleData,
+                id: `${roleId}`
+              };
+            })
+          };
+        }),
+        total: result.total
+      };
     },
     {
       query: getUsersSchema,
@@ -19,11 +34,22 @@ export const userHandler = new Elysia({ prefix: '/users' })
   .get(
     '/:id',
     async ({ params }) => {
-      const user = await findUserById(params.id).run(db);
+      const user = await findUserByIdWithRoles(params.id);
 
       if (!user) throw new NotFoundError('User');
 
-      return { user };
+      const { _id: userId, ...userData } = user;
+      return { 
+        ...userData,
+        id: `${userId}`,
+        roles: user.roles.map(role => {
+          const { _id: roleId, ...roleData } = role;
+          return {
+            ...roleData,
+            id: `${roleId}`
+          };
+        })
+      };
     },
     {
       detail: { tags: ['Users'] },
@@ -32,13 +58,25 @@ export const userHandler = new Elysia({ prefix: '/users' })
   .patch(
     '/:id',
     async ({ params, body }) => {
-      // Verify user exists before updating
-      const existingUser = await findUserById(params.id).run(db);
-
+      const existingUser = await findUserByIdWithRoles(params.id);
       if (!existingUser) throw new NotFoundError('User');
 
-      const updatedUser = await updateUser(params.id, body).run(db);
-      return { user: updatedUser };
+      const updatedUser = await updateUser(params.id, body);
+      if (!updatedUser) throw new Error('Update failed');
+      const userWithRoles = await findUserByIdWithRoles(params.id);
+      if (!userWithRoles) throw new Error('User not found after update');
+      const { _id: userId, ...userData } = userWithRoles;
+      return { 
+        ...userData,
+        id: `${userId}`,
+        roles: userWithRoles.roles.map(role => {
+          const { _id: roleId, ...roleData } = role;
+          return {
+            ...roleData,
+            id: `${roleId}`
+          };
+        })
+      };
     },
     {
       body: updateUserSchema,

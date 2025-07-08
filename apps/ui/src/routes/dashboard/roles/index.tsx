@@ -7,26 +7,19 @@ import { client } from '../../../lib/api-client';
 
 export const useRolesData = routeLoader$(async () => {
   try {
-    const [rolesResponse, permissionsResponse] = await Promise.all([
-      client.api.roles.get(),
-      client.api.permissions.get()
-    ]);
+    const rolesResponse = await client.api.roles.get();
     
-    if (rolesResponse.error || permissionsResponse.error) {
-      console.error('Failed to fetch roles or permissions:', {
-        rolesError: rolesResponse.error,
-        permissionsError: permissionsResponse.error
-      });
-      return { roles: [], permissions: [] };
+    if (rolesResponse.error) {
+      console.error('Failed to fetch roles:', rolesResponse.error);
+      return { roles: [] };
     }
     
     return {
-      roles: rolesResponse.data?.roles || [],
-      permissions: permissionsResponse.data?.permissions || []
+      roles: rolesResponse.data || []
     };
   } catch (error) {
     console.error('Error fetching roles data:', error);
-    return { roles: [], permissions: [] };
+    return { roles: [] };
   }
 });
 
@@ -34,11 +27,10 @@ export default component$(() => {
   const rolesData = useRolesData();
   
   return (
-    <div class="space-y-6">
+    <div>
       <RolesHeader totalRoles={rolesData.value.roles.length} />
       <RolesGrid 
         roles={rolesData.value.roles} 
-        permissions={rolesData.value.permissions} 
       />
     </div>
   );

@@ -25,15 +25,15 @@ export const UserProfile = component$<UserProfileProps>(({ isCollapsed = false }
         <div class="dropdown dropdown-top dropdown-end w-full">
           <div tabIndex={0} role="button" class="btn btn-ghost btn-square w-full tooltip tooltip-right" data-tip={user?.username || 'User'}>
             <div class="avatar placeholder">
-              <div class="bg-primary text-primary-content rounded-full w-8">
-                <span class="text-xs font-bold">
+              <div class="bg-primary text-primary-content rounded-full w-8 h-8 flex items-center justify-center">
+                <span class="text-xs font-bold leading-none">
                   {user?.username?.charAt(0).toUpperCase() || 'U'}
                 </span>
               </div>
             </div>
           </div>
           
-          <ul tabIndex={0} class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mb-2">
+          <ul tabIndex={0} class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 mb-2 border border-base-300">
             <li class="menu-title">
               <span>{user?.username || 'User'}</span>
             </li>
@@ -66,7 +66,7 @@ export const UserProfile = component$<UserProfileProps>(({ isCollapsed = false }
         <div tabIndex={0} role="button" class="btn btn-ghost w-full justify-start p-2">
           <div class="avatar placeholder">
             <div class="bg-primary text-primary-content rounded-full w-10">
-              <span class="text-sm font-bold">
+              <span class="text-sm font-bold leading-none">
                 {user?.username?.charAt(0).toUpperCase() || 'U'}
               </span>
             </div>
@@ -81,7 +81,7 @@ export const UserProfile = component$<UserProfileProps>(({ isCollapsed = false }
           </div>
         </div>
         
-        <ul tabIndex={0} class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mb-2">
+        <ul tabIndex={0} class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 mb-2 border border-base-300">
           <li class="menu-title">
             <span>Account</span>
           </li>

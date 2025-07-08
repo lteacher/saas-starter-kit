@@ -51,8 +51,10 @@ export default component$(() => {
       <div class="drawer-content flex flex-col">
         <DashboardHeader user={dashboardData.value?.user} />
         
-        <main class="flex-1 p-6 bg-base-100 overflow-auto">
-          <Slot />
+        <main class="flex-1 min-h-screen bg-base-100">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <Slot />
+          </div>
         </main>
       </div>
       
