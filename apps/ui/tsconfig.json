@@ -17,7 +17,11 @@
     "outDir": "tmp",
     "noEmit": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~/components/*": ["./src/components/*"],
+      "~/context/*": ["./src/context/*"],
+      "~/lib/*": ["./src/lib/*"],
+      "~/routes/*": ["./src/routes/*"]
     }
   },
   "include": ["src", "./*.d.ts", "./*.config.ts"]

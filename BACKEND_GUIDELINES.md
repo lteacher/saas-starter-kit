@@ -3,6 +3,7 @@
 ## Project Structure
 
 ### Directory Organization
+
 ```
 src/
 ├── handlers/            # Route handlers organized by resource
@@ -31,6 +32,7 @@ src/
 ## Application Architecture
 
 ### Main Application Setup
+
 ```typescript
 // src/index.ts
 import { Elysia } from 'elysia';
@@ -75,9 +77,9 @@ export const app = new Elysia({ prefix: '/api' })
     version: '1.0.0',
     status: 'healthy',
   }))
-  .get('/health', () => ({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString() 
+  .get('/health', () => ({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
   }))
   .use(authHandler)
   .use(userHandler)
@@ -94,6 +96,7 @@ app.listen(process.env.PORT || 3000, () => {
 ## Handler Patterns
 
 ### Resource-Based Handlers
+
 ```typescript
 // src/handlers/users.ts
 import { Elysia } from 'elysia';
@@ -112,7 +115,7 @@ export const userHandler = new Elysia({ prefix: '/users' })
     {
       query: getUsersSchema,
       detail: { tags: ['Users'] },
-    }
+    },
   )
   .get(
     '/:id',
@@ -125,7 +128,7 @@ export const userHandler = new Elysia({ prefix: '/users' })
     },
     {
       detail: { tags: ['Users'] },
-    }
+    },
   )
   .patch(
     '/:id',
@@ -141,11 +144,12 @@ export const userHandler = new Elysia({ prefix: '/users' })
     {
       body: updateUserSchema,
       detail: { tags: ['Users'] },
-    }
+    },
   );
 ```
 
 ### Authentication Handler
+
 ```typescript
 // src/handlers/auth.ts
 import { Elysia } from 'elysia';
@@ -161,7 +165,7 @@ export const authHandler = new Elysia({ prefix: '/auth' })
     jwt({
       name: 'jwt',
       secret: process.env.JWT_SECRET!,
-    })
+    }),
   )
   .post(
     '/register',
@@ -195,7 +199,7 @@ export const authHandler = new Elysia({ prefix: '/auth' })
     {
       body: registerSchema,
       detail: { tags: ['Auth'] },
-    }
+    },
   )
   .post(
     '/login',
@@ -229,20 +233,21 @@ export const authHandler = new Elysia({ prefix: '/auth' })
     {
       body: loginSchema,
       detail: { tags: ['Auth'] },
-    }
+    },
   );
 ```
 
 ## Data Access Layer
 
 ### Database Operations
+
 ```typescript
 // src/lib/user.ts
 import { e } from '@your-app/db';
 
 // Get all users with pagination
 export const listUsers = (limit?: number, offset?: number) =>
-  e.select(e.User, user => ({
+  e.select(e.User, (user) => ({
     id: true,
     email: true,
     username: true,
@@ -266,7 +271,7 @@ export const listUsers = (limit?: number, offset?: number) =>
 
 // Find user by ID with full relations
 export const findUserById = (id: string) =>
-  e.select(e.User, user => ({
+  e.select(e.User, (user) => ({
     id: true,
     email: true,
     username: true,
@@ -295,50 +300,53 @@ export const createUser = (userData: {
   passwordHash: string;
   firstName?: string;
   lastName?: string;
-}) =>
-  e.insert(e.User, userData);
+}) => e.insert(e.User, userData);
 
 // Update user information
-export const updateUser = (userId: string, updates: {
-  email?: string;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  isActive?: boolean;
-}) =>
-  e.update(e.User, user => ({
+export const updateUser = (
+  userId: string,
+  updates: {
+    email?: string;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+    isActive?: boolean;
+  },
+) =>
+  e.update(e.User, (user) => ({
     filter_single: { id: userId },
     set: updates,
   }));
 ```
 
 ### Complex Operations with Proper Type Casting
+
 ```typescript
 // src/lib/role.ts
 import { e } from '@your-app/db';
 
 // Assign permissions to a role (with proper UUID casting)
 export const assignPermissionsToRole = (roleId: string, permissionIds: string[]) =>
-  e.update(e.Role, role => ({
+  e.update(e.Role, (role) => ({
     filter_single: { id: roleId },
     set: {
-      permissions: { 
-        '+=': e.select(e.Permission, perm => ({ 
-          filter: e.op(perm.id, 'in', e.cast(e.uuid, e.set(...permissionIds))) 
-        })) 
+      permissions: {
+        '+=': e.select(e.Permission, (perm) => ({
+          filter: e.op(perm.id, 'in', e.cast(e.uuid, e.set(...permissionIds))),
+        })),
       },
     },
   }));
 
 // Remove permissions from a role
 export const removePermissionsFromRole = (roleId: string, permissionIds: string[]) =>
-  e.update(e.Role, role => ({
+  e.update(e.Role, (role) => ({
     filter_single: { id: roleId },
     set: {
-      permissions: { 
-        '-=': e.select(e.Permission, perm => ({ 
-          filter: e.op(perm.id, 'in', e.cast(e.uuid, e.set(...permissionIds))) 
-        })) 
+      permissions: {
+        '-=': e.select(e.Permission, (perm) => ({
+          filter: e.op(perm.id, 'in', e.cast(e.uuid, e.set(...permissionIds))),
+        })),
       },
     },
   }));
@@ -347,6 +355,7 @@ export const removePermissionsFromRole = (roleId: string, permissionIds: string[
 ## Plugin System
 
 ### Error Handling Plugin
+
 ```typescript
 // src/plugins/error-handler.ts
 import { Elysia } from 'elysia';
@@ -385,10 +394,10 @@ export const errorHandler = new Elysia()
 
       case 'VALIDATION':
         set.status = 400;
-        return { 
-          error: 'Validation failed', 
+        return {
+          error: 'Validation failed',
           details: error.message,
-          code: 'VALIDATION_ERROR' 
+          code: 'VALIDATION_ERROR',
         };
 
       default:
@@ -400,6 +409,7 @@ export const errorHandler = new Elysia()
 ```
 
 ### Request Logger Plugin
+
 ```typescript
 // src/plugins/request-logger.ts
 import { Elysia } from 'elysia';
@@ -409,20 +419,19 @@ export const requestLoggerPlugin = new Elysia()
     const start = Date.now();
     // Store start time for duration calculation
     set.headers['x-request-start'] = start.toString();
-    
+
     console.log(`${request.method} ${request.url}`);
   })
   .onResponse(({ request, set }) => {
     const start = parseInt(set.headers['x-request-start'] as string);
     const duration = Date.now() - start;
-    
-    console.log(
-      `${request.method} ${request.url} - ${set.status} (${duration}ms)`
-    );
+
+    console.log(`${request.method} ${request.url} - ${set.status} (${duration}ms)`);
   });
 ```
 
 ### Authentication Middleware Plugin
+
 ```typescript
 // src/plugins/auth.ts
 import { Elysia } from 'elysia';
@@ -436,7 +445,7 @@ export const authPlugin = new Elysia()
     jwt({
       name: 'jwt',
       secret: process.env.JWT_SECRET!,
-    })
+    }),
   )
   .derive({ as: 'scoped' }, async ({ headers, jwt }) => {
     const authorization = headers.authorization;
@@ -449,14 +458,14 @@ export const authPlugin = new Elysia()
 
     try {
       const payload = await jwt.verify(token);
-      
+
       if (!payload || !payload.userId) {
         throw new UnauthorizedError('Invalid token');
       }
 
       // Fetch current user data
       const user = await findUserById(payload.userId).run(db);
-      
+
       if (!user || !user.isActive) {
         throw new UnauthorizedError('User not found or inactive');
       }
@@ -471,6 +480,7 @@ export const authPlugin = new Elysia()
 ## Error Handling
 
 ### Custom Error Classes
+
 ```typescript
 // src/lib/errors.ts
 export class NotFoundError extends Error {
@@ -482,7 +492,7 @@ export class NotFoundError extends Error {
 
 export class ConflictError extends Error {
   public details?: string;
-  
+
   constructor(message: string, details?: string) {
     super(message);
     this.name = 'ConflictError';
@@ -508,38 +518,35 @@ export class ValidationError extends Error {
 ## Schema Validation
 
 ### Input Validation Patterns
+
 ```typescript
 // Using schemas consistently across handlers
-export const userHandler = new Elysia({ prefix: '/users' })
-  .post(
-    '/',
-    async ({ body }) => {
-      // Schema validation happens automatically
-      const newUser = await createUser(body).run(db);
-      return { user: newUser };
+export const userHandler = new Elysia({ prefix: '/users' }).post(
+  '/',
+  async ({ body }) => {
+    // Schema validation happens automatically
+    const newUser = await createUser(body).run(db);
+    return { user: newUser };
+  },
+  {
+    body: createUserSchema, // TypeBox schema with validation
+    detail: { tags: ['Users'] },
+    response: {
+      201: t.Object({
+        user: UserSchema,
+      }),
     },
-    {
-      body: createUserSchema, // TypeBox schema with validation
-      detail: { tags: ['Users'] },
-      response: {
-        201: t.Object({
-          user: UserSchema
-        })
-      }
-    }
-  );
+  },
+);
 ```
 
 ## Security Best Practices
 
 ### Environment Configuration
+
 ```typescript
 // Validate required environment variables on startup
-const requiredEnvVars = [
-  'JWT_SECRET',
-  'DATABASE_URL',
-  'FRONTEND_URL'
-];
+const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL', 'FRONTEND_URL'];
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
@@ -550,6 +557,7 @@ for (const envVar of requiredEnvVars) {
 ```
 
 ### Password Security
+
 ```typescript
 // src/utils/password.ts
 import { Bun } from 'bun';
@@ -561,10 +569,7 @@ export async function hashPassword(password: string): Promise<string> {
   });
 }
 
-export async function verifyPassword(
-  password: string, 
-  hash: string
-): Promise<boolean> {
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return Bun.password.verify(password, hash);
 }
 ```
@@ -572,6 +577,7 @@ export async function verifyPassword(
 ## Testing Considerations
 
 ### Handler Testing Structure
+
 ```typescript
 // Structure handlers for easy testing
 export const createUserHandler = async (userData: CreateUserData) => {
@@ -591,23 +597,27 @@ export const createUserHandler = async (userData: CreateUserData) => {
 };
 
 // Use in handler
-export const userHandler = new Elysia({ prefix: '/users' })
-  .post('/', async ({ body }) => {
+export const userHandler = new Elysia({ prefix: '/users' }).post(
+  '/',
+  async ({ body }) => {
     const user = await createUserHandler(body);
     return { user };
-  }, {
+  },
+  {
     body: createUserSchema,
-    detail: { tags: ['Users'] }
-  });
+    detail: { tags: ['Users'] },
+  },
+);
 ```
 
 ## Performance Optimization
 
 ### Database Query Optimization
+
 ```typescript
 // ✅ Use efficient queries with proper projections
 export const listUsersForTable = () =>
-  e.select(e.User, user => ({
+  e.select(e.User, (user) => ({
     id: true,
     email: true,
     username: true,
@@ -622,7 +632,7 @@ export const listUsersForTable = () =>
 
 // ❌ Avoid over-fetching data
 export const listUsersInefficient = () =>
-  e.select(e.User, user => ({
+  e.select(e.User, (user) => ({
     '*': true, // Fetches everything
     roles: {
       '*': true, // Fetches all role data
@@ -632,23 +642,23 @@ export const listUsersInefficient = () =>
 ```
 
 ### Response Caching
+
 ```typescript
 // Add caching headers for static data
-export const permissionHandler = new Elysia({ prefix: '/permissions' })
-  .get(
-    '/',
-    async ({ set }) => {
-      const permissions = await listPermissions().run(db);
-      
-      // Cache for 5 minutes since permissions change rarely
-      set.headers['Cache-Control'] = 'public, max-age=300';
-      
-      return { permissions };
-    },
-    {
-      detail: { tags: ['Permissions'] },
-    }
-  );
+export const permissionHandler = new Elysia({ prefix: '/permissions' }).get(
+  '/',
+  async ({ set }) => {
+    const permissions = await listPermissions().run(db);
+
+    // Cache for 5 minutes since permissions change rarely
+    set.headers['Cache-Control'] = 'public, max-age=300';
+
+    return { permissions };
+  },
+  {
+    detail: { tags: ['Permissions'] },
+  },
+);
 ```
 
 Remember: Elysia's strength lies in its simplicity and type safety. Keep handlers focused, use the plugin system for reusable functionality, and always validate inputs with schemas.

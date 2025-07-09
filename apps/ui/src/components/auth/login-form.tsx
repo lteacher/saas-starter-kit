@@ -9,19 +9,19 @@ interface LoginFormProps {
 }
 
 export const LoginForm = component$<LoginFormProps>(({ onSubmit, isLoading = false }) => {
-  const email = useSignal('');
+  const identifier = useSignal('');
   const password = useSignal('');
   const error = useSignal('');
 
   const handleSubmit = $(async () => {
-    if (!email.value || !password.value) {
+    if (!identifier.value || !password.value) {
       error.value = 'Please fill in all fields';
       return;
     }
 
     error.value = '';
     try {
-      await onSubmit({ email: email.value, password: password.value });
+      await onSubmit({ identifier: identifier.value, password: password.value });
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Login failed';
     }
@@ -30,15 +30,15 @@ export const LoginForm = component$<LoginFormProps>(({ onSubmit, isLoading = fal
   return (
     <div class="space-y-4">
       {error.value && <Alert type="error" message={error.value} />}
-      
-      <FormField label="Email">
+
+      <FormField label="Email or Username">
         <input
-          type="email"
-          placeholder="Enter your email"
+          type="text"
+          placeholder="Enter your email or username"
           class="input input-bordered w-full"
-          value={email.value}
+          value={identifier.value}
           onInput$={(e) => {
-            email.value = (e.target as HTMLInputElement).value;
+            identifier.value = (e.target as HTMLInputElement).value;
           }}
           disabled={isLoading}
         />

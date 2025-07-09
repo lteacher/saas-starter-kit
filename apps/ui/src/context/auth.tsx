@@ -1,13 +1,22 @@
-import { createContextId, useContext, useSignal, useVisibleTask$, component$, Slot, useContextProvider, $, isBrowser } from '@builder.io/qwik';
+import {
+  createContextId,
+  useContext,
+  useSignal,
+  component$,
+  Slot,
+  useContextProvider,
+  $,
+} from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import type { Signal } from '@builder.io/qwik';
-import type { AuthUser, AuthState, LoginInput, RegisterInput } from '@saas-starter/types';
-import { client } from '../lib/api-client';
+import type { AuthUser, AuthState, LoginInput } from '@saas-starter/types';
+import { useLogoutAction } from '../routes/auth/actions';
 
 export interface AuthContext {
   state: Signal<AuthState>;
   login: (credentials: LoginInput) => Promise<void>;
-  register: (userData: RegisterInput) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  updateUser: (user: AuthUser | null) => void;
 }
 
 export const AuthContextId = createContextId<AuthContext>('auth-context');
@@ -20,57 +29,47 @@ export const useAuth = () => {
   return context;
 };
 
-export const createAuthContext = (): AuthContext => {
+// Creates authentication context with proper Qwik patterns
+export const createAuthContext = ({
+  initialUser,
+  loginAction,
+}: {
+  initialUser?: AuthUser | null;
+  loginAction?: any;
+}): AuthContext => {
   const state = useSignal<AuthState>({
-    user: null,
-    isAuthenticated: false,
-    isLoading: true,
+    user: initialUser || null,
+    isAuthenticated: !!initialUser,
+    isLoading: false,
   });
 
-  // Auto-check auth on client-side initialization
-  useVisibleTask$(() => {
-    const storedUser = localStorage.getItem('auth_user');
-    if (storedUser) {
-      try {
-        state.value = {
-          user: JSON.parse(storedUser),
-          isAuthenticated: true,
-          isLoading: false,
-        };
-      } catch {
-        localStorage.removeItem('auth_user');
-        state.value = { user: null, isAuthenticated: false, isLoading: false };
-      }
-    } else {
-      state.value = { user: null, isAuthenticated: false, isLoading: false };
-    }
-  });
+  const nav = useNavigate();
+  const logoutAction = useLogoutAction();
 
-  const login = $(async ({ email, password }: LoginInput) => {
+  // Login function that calls server action
+  const login = $(async (credentials: LoginInput) => {
     state.value = { ...state.value, isLoading: true };
-    
+
     try {
-      const response = await client.api.auth.login.post({ email, password });
-      
-      if (response.data && 'user' in response.data) {
-        const user = response.data.user as AuthUser;
-        
-        if (isBrowser) {
-          // Store in localStorage for client-side persistence
-          localStorage.setItem('auth_user', JSON.stringify(user));
-          
-          // Set HTTP-only cookies for server-side validation
-          document.cookie = `auth_user=${JSON.stringify(user)}; path=/; max-age=86400; SameSite=Strict`;
-          document.cookie = `auth_token=authenticated; path=/; max-age=86400; SameSite=Strict`;
-        }
-        
+      if (!loginAction) {
+        throw new Error('Login action not available');
+      }
+
+      const result = await loginAction.submit(credentials);
+
+      if (result.value?.success && result.value.user) {
+        // Update context with user data
         state.value = {
-          user,
+          user: result.value.user,
           isAuthenticated: true,
           isLoading: false,
         };
+
+        // Navigate to dashboard
+        nav('/dashboard');
       } else {
-        throw new Error('Invalid response format');
+        state.value = { user: null, isAuthenticated: false, isLoading: false };
+        throw new Error(result.value?.message || 'Login failed');
       }
     } catch (error) {
       state.value = { user: null, isAuthenticated: false, isLoading: false };
@@ -78,26 +77,26 @@ export const createAuthContext = (): AuthContext => {
     }
   });
 
-  const register = $(async ({ email, username, password }: RegisterInput) => {
+  // Logout function that redirects to logout route
+  const logout = $(async () => {
     state.value = { ...state.value, isLoading: true };
-    
-    try {
-      await client.api.auth.register.post({ email, username, password });
-      // Auto-login after successful registration
-      await login({ email, password });
-    } catch (error) {
-      state.value = { user: null, isAuthenticated: false, isLoading: false };
-      throw error;
+
+    // Clear local state
+    state.value = { user: null, isAuthenticated: false, isLoading: false };
+
+    // Redirect to logout route which will clear cookies and redirect to login
+    if (typeof window !== 'undefined') {
+      window.location.href = '/logout';
+    } else {
+      nav('/logout');
     }
   });
 
-  const logout = $(() => {
-    if (isBrowser) {
-      localStorage.removeItem('auth_user');
-    }
+  // Updates user state when authentication changes
+  const updateUser = $((user: AuthUser | null) => {
     state.value = {
-      user: null,
-      isAuthenticated: false,
+      user,
+      isAuthenticated: !!user,
       isLoading: false,
     };
   });
@@ -105,15 +104,17 @@ export const createAuthContext = (): AuthContext => {
   return {
     state,
     login,
-    register,
     logout,
+    updateUser,
   };
 };
 
 // AuthProvider component to wrap the app
-export const AuthProvider = component$(() => {
-  const authContext = createAuthContext();
-  useContextProvider(AuthContextId, authContext);
-  
-  return <Slot />;
-});
+export const AuthProvider = component$<{ initialUser?: AuthUser | null; loginAction?: any }>(
+  ({ initialUser, loginAction }) => {
+    const authContext = createAuthContext({ initialUser, loginAction });
+    useContextProvider(AuthContextId, authContext);
+
+    return <Slot />;
+  },
+);

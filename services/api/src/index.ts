@@ -4,6 +4,7 @@ import { swagger } from '@elysiajs/swagger';
 import { authHandler } from './handlers/auth';
 import { userHandler } from './handlers/users';
 import { roleHandler } from './handlers/roles';
+import { invitationHandler } from './handlers/invitations';
 import { errorHandler } from './plugins/error-handler';
 import { requestLoggerPlugin } from './plugins/request-logger';
 
@@ -23,7 +24,9 @@ export const app = new Elysia()
     status: 'healthy',
     timestamp: new Date().toISOString(),
   }))
-  .group('/api', (app) => app.use(authHandler).use(userHandler).use(roleHandler))
+  .group('/api', (app) =>
+    app.use(authHandler).use(userHandler).use(roleHandler).use(invitationHandler),
+  )
   .use(
     swagger({
       documentation: {
@@ -35,16 +38,17 @@ export const app = new Elysia()
         servers: [
           {
             url: 'http://localhost:3000',
-            description: 'Development server'
-          }
+            description: 'Development server',
+          },
         ],
         tags: [
           { name: 'Auth', description: 'Authentication endpoints' },
           { name: 'Users', description: 'User management endpoints' },
           { name: 'Roles', description: 'Role management endpoints' },
+          { name: 'Invitations', description: 'User invitation endpoints' },
         ],
       },
-      path: '/swagger'
+      path: '/swagger',
     }),
   );
 
