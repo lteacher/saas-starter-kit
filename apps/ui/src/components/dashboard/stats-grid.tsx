@@ -16,13 +16,13 @@ export const StatsGrid = component$<StatsGridProps>(({ stats }) => {
         <div class="stat-value text-primary">{stats?.totalUsers || 0}</div>
         <div class="stat-desc">Registered users</div>
       </div>
-      
+
       <div class="stat bg-base-200 rounded-box">
         <div class="stat-title">Active Sessions</div>
         <div class="stat-value text-secondary">{stats?.activeSessions || 0}</div>
         <div class="stat-desc">Current sessions</div>
       </div>
-      
+
       <div class="stat bg-base-200 rounded-box">
         <div class="stat-title">Account Status</div>
         <div class="stat-value text-accent">{stats?.accountStatus || 'Unknown'}</div>

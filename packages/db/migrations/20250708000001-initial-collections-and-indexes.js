@@ -21,7 +21,9 @@ module.exports = {
 
     // User sessions collection indexes
     await db.collection('user-sessions').createIndex({ sessionToken: 1 }, { unique: true });
-    await db.collection('user-sessions').createIndex({ refreshToken: 1 }, { unique: true, sparse: true });
+    await db
+      .collection('user-sessions')
+      .createIndex({ refreshToken: 1 }, { unique: true, sparse: true });
     await db.collection('user-sessions').createIndex({ userId: 1, isActive: 1 });
     await db.collection('user-sessions').createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
@@ -36,5 +38,5 @@ module.exports = {
     await db.collection('roles').drop();
     await db.collection('user-sessions').drop();
     await db.collection('audit-logs').drop();
-  }
+  },
 };

@@ -1,13 +1,24 @@
-// Result type for error handling
-export type Result<T, E = Error> = 
-  | { success: true; data: T }
-  | { success: false; error: E };
+// Custom error classes for specific error types
+export class ValidationError extends Error {
+  constructor(field: string, message: string) {
+    super(`Validation failed for ${field}: ${message}`);
+    this.name = 'ValidationError';
+  }
+}
 
-// Creates a successful result
-export const success = <T>(data: T): Result<T> => ({ success: true, data });
+export class ConfigurationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ConfigurationError';
+  }
+}
 
-// Creates an error result  
-export const error = <E = Error>(error: E): Result<never, E> => ({ success: false, error });
+export class EmailServiceError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'EmailServiceError';
+  }
+}
 
 // Email validation utility
 export const isValidEmail = (email: string): boolean => {
@@ -39,16 +50,16 @@ export const generateRandomString = (length: number): string => {
 
 // Sleep utility for delays
 export const sleep = (ms: number): Promise<void> => {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 // Object key filtering
 export const pick = <T extends Record<string, any>, K extends keyof T>(
-  obj: T, 
-  keys: K[]
+  obj: T,
+  keys: K[],
 ): Pick<T, K> => {
   const result = {} as Pick<T, K>;
-  keys.forEach(key => {
+  keys.forEach((key) => {
     if (key in obj) {
       result[key] = obj[key];
     }
@@ -58,11 +69,11 @@ export const pick = <T extends Record<string, any>, K extends keyof T>(
 
 // Object key exclusion
 export const omit = <T extends Record<string, any>, K extends keyof T>(
-  obj: T, 
-  keys: K[]
+  obj: T,
+  keys: K[],
 ): Omit<T, K> => {
   const result = { ...obj } as Omit<T, K>;
-  keys.forEach(key => {
+  keys.forEach((key) => {
     delete (result as any)[key];
   });
   return result;
@@ -76,7 +87,7 @@ export const formatDate = (date: Date): string => {
 // Debounce function
 export const debounce = <T extends (...args: any[]) => any>(
   func: T,
-  delay: number
+  delay: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: NodeJS.Timeout;
   return (...args: Parameters<T>) => {

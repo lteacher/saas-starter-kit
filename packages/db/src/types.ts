@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-// Base interfaces for composition  
+// Base interfaces for composition
 export interface BaseDocument {
   _id: ObjectId;
 }
@@ -35,6 +35,9 @@ export interface User extends BaseDocument, Timestamped, Activatable {
   emailVerificationToken?: string;
   emailVerifiedAt?: Date;
   roleIds: ObjectId[];
+  status: 'pending' | 'active' | 'inactive';
+  tempPassword: boolean;
+  invitationToken?: string;
 }
 
 export interface Role extends BaseDocument, Timestamped, Activatable {
@@ -65,6 +68,15 @@ export interface AuditLog extends BaseDocument {
   ipAddress?: string;
   userAgent?: string;
   createdAt: Date;
+}
+
+export interface Invitation extends BaseDocument, Timestamped {
+  userId: ObjectId;
+  email: string;
+  token: string;
+  invitedBy: ObjectId;
+  status: 'pending' | 'accepted' | 'expired' | 'cancelled';
+  expiresAt: Date;
 }
 
 // API response types with populated data

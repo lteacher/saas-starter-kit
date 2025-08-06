@@ -1,5 +1,15 @@
-import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { component$ } from '@builder.io/qwik';
+import type { DocumentHead, RequestHandler } from '@builder.io/qwik-city';
+
+// Redirect authenticated users to dashboard
+export const onRequest: RequestHandler = async ({ cookie, redirect }) => {
+  const authToken = cookie.get('auth_token')?.value;
+  const storedUser = cookie.get('auth_user')?.value;
+
+  if (authToken && storedUser) {
+    throw redirect(302, '/dashboard');
+  }
+};
 
 export default component$(() => {
   return (
@@ -9,12 +19,11 @@ export default component$(() => {
         <div class="card bg-base-200 shadow-xl">
           <div class="card-body">
             <h2 class="card-title text-2xl">TailwindCSS + DaisyUI Setup Complete!</h2>
-            <p class="text-base-content/70">
-              Your Qwik app is now ready with modern styling.
-            </p>
+            <p class="text-base-content/70">Your Qwik app is now ready with modern styling.</p>
             <div class="card-actions justify-end mt-4">
-              <a href="/login" class="btn btn-primary">Sign In</a>
-              <a href="/register" class="btn btn-outline">Get Started</a>
+              <a href="/login" class="btn btn-primary">
+                Sign In
+              </a>
             </div>
           </div>
         </div>
@@ -24,11 +33,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: 'Welcome to Qwik',
   meta: [
     {
-      name: "description",
-      content: "Qwik site description",
+      name: 'description',
+      content: 'Qwik site description',
     },
   ],
 };

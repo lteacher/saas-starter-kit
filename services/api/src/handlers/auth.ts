@@ -1,41 +1,31 @@
 import { Elysia } from 'elysia';
-import { hashPassword, verifyPassword } from '../utils/password';
-import { registerSchema, loginSchema } from '@saas-starter/schemas';
-import { findUserByEmailWithRoles, createUser, updateLastLogin } from '@saas-starter/db';
-import { ConflictError, UnauthorizedError, InternalServerError } from '../lib/errors';
+import { jwt } from '@elysiajs/jwt';
+import { verifyPassword } from '../utils/password';
+import { loginSchema } from '@saas-starter/schemas';
+import {
+  findUserByEmailWithRoles,
+  findUserByUsernameWithRoles,
+  updateLastLogin,
+} from '@saas-starter/db';
+import { UnauthorizedError } from '../lib/errors';
 
 export const authHandler = new Elysia({ prefix: '/auth' })
-  .post(
-    '/register',
-    async ({ body }) => {
-      const existingUser = await findUserByEmailWithRoles(body.email);
-
-      if (existingUser) throw new ConflictError('User already exists', 'Email is already registered');
-
-      const passwordHash = await hashPassword(body.password);
-      
-      const newUser = await createUser({
-        email: body.email,
-        username: body.username,
-        passwordHash,
-      });
-
-      const { _id, ...userData } = newUser;
-      return {
-        id: `${_id}`,
-        email: userData.email,
-        username: userData.username,
-      };
-    },
-    {
-      body: registerSchema,
-      detail: { tags: ['Auth'] },
-    }
+  .use(
+    jwt({
+      name: 'jwt',
+      secret: process.env.JWT_SECRET || 'default-secret-key',
+    }),
   )
   .post(
     '/login',
-    async ({ body }) => {
-      const user = await findUserByEmailWithRoles(body.email);
+    async ({ body, jwt }) => {
+      // Try to find user by email first, then by username
+      let user = await findUserByEmailWithRoles(body.identifier);
+
+      if (!user) {
+        // If not found by email, try by username
+        user = await findUserByUsernameWithRoles(body.identifier);
+      }
 
       if (!user || !user.isActive) throw new UnauthorizedError('Invalid credentials');
 
@@ -45,21 +35,28 @@ export const authHandler = new Elysia({ prefix: '/auth' })
 
       await updateLastLogin(`${user._id}`);
 
+      // Generate JWT token
+      const token = await jwt.sign({ userId: `${user._id}` });
+
       const { _id: userId, ...userInfo } = user;
       return {
         user: {
           id: `${userId}`,
           email: userInfo.email,
           username: userInfo.username,
-          roles: user.roles.map(role => ({
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+          tempPassword: userInfo.tempPassword,
+          roles: user.roles.map((role) => ({
             name: role.name,
             permissions: role.permissions,
           })),
         },
+        token,
       };
     },
     {
       body: loginSchema,
       detail: { tags: ['Auth'] },
-    }
+    },
   );

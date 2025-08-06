@@ -21,62 +21,64 @@ export const createSession = async (sessionData: {
     lastAccessedAt: now,
     ipAddress: sessionData.ipAddress,
     userAgent: sessionData.userAgent,
-    isActive: true
+    isActive: true,
   };
 
-  const result = await db.collection<UserSession>('user-sessions').insertOne(newSession as UserSession);
+  const result = await db
+    .collection<UserSession>('user-sessions')
+    .insertOne(newSession as UserSession);
   return { ...newSession, _id: result.insertedId };
 };
 
 // Finds a session by session token
 export const findSessionByToken = async (sessionToken: string): Promise<UserSession | null> => {
-  return db.collection<UserSession>('user-sessions').findOne({ 
+  return db.collection<UserSession>('user-sessions').findOne({
     sessionToken,
     isActive: true,
-    expiresAt: { $gt: new Date() }
+    expiresAt: { $gt: new Date() },
   });
 };
 
 // Finds a session by refresh token
-export const findSessionByRefreshToken = async (refreshToken: string): Promise<UserSession | null> => {
-  return db.collection<UserSession>('user-sessions').findOne({ 
+export const findSessionByRefreshToken = async (
+  refreshToken: string,
+): Promise<UserSession | null> => {
+  return db.collection<UserSession>('user-sessions').findOne({
     refreshToken,
     isActive: true,
-    expiresAt: { $gt: new Date() }
+    expiresAt: { $gt: new Date() },
   });
 };
 
 // Updates session's last accessed time
 export const updateSessionAccess = async (sessionId: string): Promise<void> => {
-  await db.collection<UserSession>('user-sessions').updateOne(
-    { _id: new ObjectId(sessionId) },
-    { $set: { lastAccessedAt: new Date() } }
-  );
+  await db
+    .collection<UserSession>('user-sessions')
+    .updateOne({ _id: new ObjectId(sessionId) }, { $set: { lastAccessedAt: new Date() } });
 };
 
 // Deactivates a session (logout)
 export const deactivateSession = async (sessionToken: string): Promise<void> => {
-  await db.collection<UserSession>('user-sessions').updateOne(
-    { sessionToken },
-    { $set: { isActive: false } }
-  );
+  await db
+    .collection<UserSession>('user-sessions')
+    .updateOne({ sessionToken }, { $set: { isActive: false } });
 };
 
 // Deactivates all sessions for a user
 export const deactivateAllUserSessions = async (userId: string): Promise<void> => {
-  await db.collection<UserSession>('user-sessions').updateMany(
-    { userId: new ObjectId(userId) },
-    { $set: { isActive: false } }
-  );
+  await db
+    .collection<UserSession>('user-sessions')
+    .updateMany({ userId: new ObjectId(userId) }, { $set: { isActive: false } });
 };
 
 // Gets active sessions for a user
 export const getUserSessions = async (userId: string): Promise<UserSession[]> => {
-  return db.collection<UserSession>('user-sessions')
-    .find({ 
+  return db
+    .collection<UserSession>('user-sessions')
+    .find({
       userId: new ObjectId(userId),
       isActive: true,
-      expiresAt: { $gt: new Date() }
+      expiresAt: { $gt: new Date() },
     })
     .sort({ lastAccessedAt: -1 })
     .toArray();
@@ -85,11 +87,8 @@ export const getUserSessions = async (userId: string): Promise<UserSession[]> =>
 // Cleans up expired sessions
 export const cleanupExpiredSessions = async (): Promise<number> => {
   const result = await db.collection<UserSession>('user-sessions').deleteMany({
-    $or: [
-      { expiresAt: { $lte: new Date() } },
-      { isActive: false }
-    ]
+    $or: [{ expiresAt: { $lte: new Date() } }, { isActive: false }],
   });
-  
+
   return result.deletedCount;
 };

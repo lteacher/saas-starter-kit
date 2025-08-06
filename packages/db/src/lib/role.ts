@@ -5,11 +5,8 @@ import { db } from '../connection';
 // Gets all roles
 export const listRoles = async (includeInactive = false): Promise<Role[]> => {
   const filter = includeInactive ? {} : { isActive: true };
-  
-  return db.collection<Role>('roles')
-    .find(filter)
-    .sort({ name: 1 })
-    .toArray();
+
+  return db.collection<Role>('roles').find(filter).sort({ name: 1 }).toArray();
 };
 
 // Finds a role by ID
@@ -35,7 +32,7 @@ export const createRole = async (roleData: {
     isActive: true,
     createdAt: now,
     updatedAt: now,
-    permissions: roleData.permissions || []
+    permissions: roleData.permissions || [],
   };
 
   const result = await db.collection<Role>('roles').insertOne(newRole as Role);
@@ -43,72 +40,84 @@ export const createRole = async (roleData: {
 };
 
 // Updates role information
-export const updateRole = async (roleId: string, updates: {
-  name?: string;
-  description?: string;
-  isActive?: boolean;
-}): Promise<Role | null> => {
+export const updateRole = async (
+  roleId: string,
+  updates: {
+    name?: string;
+    description?: string;
+    isActive?: boolean;
+  },
+): Promise<Role | null> => {
   const result = await db.collection<Role>('roles').findOneAndUpdate(
     { _id: new ObjectId(roleId) },
-    { 
-      $set: { 
+    {
+      $set: {
         ...updates,
-        updatedAt: new Date()
-      } 
+        updatedAt: new Date(),
+      },
     },
-    { returnDocument: 'after' }
+    { returnDocument: 'after' },
   );
 
   return result;
 };
 
 // Adds a permission to a role
-export const addPermissionToRole = async (roleId: string, permission: Permission): Promise<void> => {
+export const addPermissionToRole = async (
+  roleId: string,
+  permission: Permission,
+): Promise<void> => {
   await db.collection<Role>('roles').updateOne(
     { _id: new ObjectId(roleId) },
-    { 
+    {
       $addToSet: { permissions: permission },
-      $set: { updatedAt: new Date() }
-    }
+      $set: { updatedAt: new Date() },
+    },
   );
 };
 
 // Removes a permission from a role
-export const removePermissionFromRole = async (roleId: string, permissionName: string): Promise<void> => {
+export const removePermissionFromRole = async (
+  roleId: string,
+  permissionName: string,
+): Promise<void> => {
   await db.collection<Role>('roles').updateOne(
     { _id: new ObjectId(roleId) },
-    { 
+    {
       $pull: { permissions: { name: permissionName } },
-      $set: { updatedAt: new Date() }
-    }
+      $set: { updatedAt: new Date() },
+    },
   );
 };
 
 // Updates all permissions for a role
-export const updateRolePermissions = async (roleId: string, permissions: Permission[]): Promise<void> => {
+export const updateRolePermissions = async (
+  roleId: string,
+  permissions: Permission[],
+): Promise<void> => {
   await db.collection<Role>('roles').updateOne(
     { _id: new ObjectId(roleId) },
-    { 
-      $set: { 
+    {
+      $set: {
         permissions,
-        updatedAt: new Date()
-      }
-    }
+        updatedAt: new Date(),
+      },
+    },
   );
 };
 
 // Gets all unique permissions across all roles
 export const getAllPermissions = async (): Promise<Permission[]> => {
   const roles = await db.collection<Role>('roles').find({ isActive: true }).toArray();
-  
+
   const permissionMap = new Map<string, Permission>();
-  
-  roles.forEach(role => {
-    role.permissions.forEach(permission => {
+
+  roles.forEach((role) => {
+    role.permissions.forEach((permission) => {
       permissionMap.set(permission.name, permission);
     });
   });
-  
+
   return Array.from(permissionMap.values()).sort((a, b) => {
     if (a.resource !== b.resource) {
       return a.resource.localeCompare(b.resource);

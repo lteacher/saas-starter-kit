@@ -1,12 +1,12 @@
 import type { Static } from 'elysia';
-import { 
-  UserSchema, 
-  RoleSchema, 
+import {
+  UserSchema,
+  RoleSchema,
   PermissionSchema,
   registerSchema,
   loginSchema,
   updateUserSchema,
-  getUsersSchema
+  getUsersSchema,
 } from '@saas-starter/schemas';
 
 // Core entity types derived from schemas
@@ -62,4 +62,25 @@ export interface RegisterResponse {
   id: string;
   email: string;
   username: string;
+}
+
+// Email service types
+export interface EmailConfig {
+  apiKey: string;
+  fromEmail: string;
+  fromName: string;
+  apiUrl: string;
+}
+
+export interface InvitationEmailData {
+  to: string;
+  token: string;
+  invitedByName: string;
+  appName: string;
+  baseUrl: string;
+}
+
+export interface EmailResponse {
+  id: string;
+  status: string;
 }
